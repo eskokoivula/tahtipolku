@@ -89,6 +89,82 @@
   .cloud-2::before { width: 28px; height: 28px; top: -12px; left: 8px; }
   @keyframes drift { 0%,100% { transform: translateX(0); } 50% { transform: translateX(30px); } }
 
+  .banner-tree-left {
+    position: absolute; bottom: 28px; left: 16px; z-index: 1;
+    filter: drop-shadow(0 4px 8px rgba(60,30,0,0.25));
+    animation: tree-sway 5s ease-in-out infinite;
+  }
+  .banner-tree-right {
+    position: absolute; bottom: 24px; right: 14px; z-index: 1;
+    filter: drop-shadow(0 4px 8px rgba(60,30,0,0.25));
+    animation: tree-sway 5s ease-in-out infinite -2.5s;
+  }
+
+  /* Banner hills & extras */
+  .banner-hills {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    width: 100%; height: 60px; z-index: 0;
+    pointer-events: none;
+  }
+  .banner-flying-elf {
+    position: absolute; top: 26%; left: -30px; z-index: 2;
+    filter: drop-shadow(0 3px 5px rgba(60,30,0,0.2));
+    animation: banner-elf-fly 16s linear infinite;
+  }
+  @keyframes banner-elf-fly {
+    0% { left: -30px; transform: translateY(0) rotate(-4deg); }
+    25% { transform: translateY(-6px) rotate(3deg); }
+    50% { transform: translateY(3px) rotate(-2deg); }
+    75% { transform: translateY(-4px) rotate(5deg); }
+    100% { left: 100%; transform: translateY(0) rotate(-4deg); }
+  }
+  .banner-twinkle {
+    position: absolute; color: #FFF59D; font-size: 14px; z-index: 1;
+    text-shadow: 0 0 8px rgba(255,235,100,0.9);
+    animation: scene-twinkle 2.8s ease-in-out infinite;
+  }
+  .banner-twinkle.bt-1 { top: 24px; left: 22%; font-size: 12px; animation-delay: 0s; }
+  .banner-twinkle.bt-2 { top: 56px; left: 30%; animation-delay: -0.7s; }
+  .banner-twinkle.bt-3 { top: 38px; right: 30%; font-size: 12px; animation-delay: -1.4s; }
+  .banner-twinkle.bt-4 { top: 70px; right: 20%; animation-delay: -2.1s; }
+  @keyframes tree-sway {
+    0%, 100% { transform: rotate(-1.5deg); }
+    50% { transform: rotate(1.5deg); }
+  }
+
+  .banner-big-star {
+    font-size: 64px; position: relative; z-index: 2;
+    display: inline-block; cursor: pointer;
+    background: transparent; border: none; padding: 6px;
+    animation: star-spin 6s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(120,60,0,0.35));
+    transition: transform 0.15s;
+  }
+  .banner-big-star:hover { transform: scale(1.1); }
+  .banner-big-star:active { transform: scale(0.92); }
+  .banner-big-star.burst { animation: star-burst 0.6s ease-out; }
+  @keyframes star-spin {
+    0%,100% { transform: rotate(-8deg) scale(1); }
+    50% { transform: rotate(8deg) scale(1.1); }
+  }
+  @keyframes star-burst {
+    0% { transform: rotate(-8deg) scale(1); filter: drop-shadow(0 4px 12px rgba(120,60,0,0.35)); }
+    40% { transform: rotate(360deg) scale(1.6); filter: drop-shadow(0 0 30px rgba(255,235,100,1)) brightness(1.3); }
+    100% { transform: rotate(720deg) scale(1); filter: drop-shadow(0 4px 12px rgba(120,60,0,0.35)); }
+  }
+  .banner-star-particle {
+    position: absolute; font-size: 22px; pointer-events: none;
+    z-index: 1000; transform: translate(-50%, -50%);
+    animation: banner-particle-fly 1.1s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+    filter: drop-shadow(0 0 8px rgba(255,202,40,0.8));
+  }
+  @keyframes banner-particle-fly {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    25% { opacity: 1; transform: translate(-50%, -50%) scale(1.3); }
+    100% { opacity: 0;
+      transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.6) rotate(360deg); }
+  }
+
   .banner-title {
     font-family: 'Fredoka One', cursive; font-size: clamp(36px, 8vw, 52px);
     color: #3D1F00; letter-spacing: -1px; position: relative; z-index: 2;
@@ -101,15 +177,6 @@
     100% { transform: scale(1); opacity: 1; }
   }
   .banner-sub { font-family: 'Caveat', cursive; font-size: 22px; color: #5D2F00; margin-top: 4px; position: relative; z-index: 2; font-weight: 700; }
-  .banner-big-star {
-    font-size: 54px; position: relative; z-index: 2; display: inline-block;
-    animation: star-spin 6s ease-in-out infinite;
-    filter: drop-shadow(0 4px 8px rgba(120,60,0,0.3));
-  }
-  @keyframes star-spin {
-    0%,100% { transform: rotate(-8deg) scale(1); }
-    50% { transform: rotate(8deg) scale(1.1); }
-  }
 
   .story-card {
     background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
@@ -143,42 +210,59 @@
   }
 
   .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; margin-bottom: 32px; }
-  .kpi-box { background: white; border-radius: 20px; padding: 16px 10px 14px; text-align: center; border: 3px solid; position: relative; }
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 20px; margin-bottom: 20px; }
+  .kpi-box {
+    background: white; border-radius: 14px; padding: 10px 6px 8px;
+    text-align: center; border: 2px solid; position: relative;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
   .kpi-box::before {
-    content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
-    width: 40px; height: 8px; background: currentColor; border-radius: 4px; opacity: 0.25;
+    content: ''; position: absolute; top: -5px; left: 50%; transform: translateX(-50%);
+    width: 26px; height: 5px; background: currentColor; border-radius: 3px; opacity: 0.3;
   }
   .kpi-box.tier-1 { border-color: #EC407A; color: #AD1457; background: linear-gradient(180deg, #FFF0F5 0%, #FFE4EC 100%); }
   .kpi-box.tier-2 { border-color: #42A5F5; color: #0D47A1; background: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 100%); }
   .kpi-box.tier-3 { border-color: #7E57C2; color: #4527A0; background: linear-gradient(180deg, #F3E5F5 0%, #E1BEE7 100%); }
-  .kpi-icon { font-size: 32px; margin-bottom: 4px; display: block; }
-  .kpi-stars { font-family: 'Fredoka One', cursive; font-size: 22px; margin-bottom: 2px; }
-  .kpi-label { font-size: 10px; font-weight: 800; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
-  .kpi-prize { font-family: 'Caveat', cursive; font-size: 18px; font-weight: 700; margin-top: 6px; line-height: 1.2; }
+  .kpi-icon { font-size: 22px; line-height: 1; }
+  .kpi-stars { font-family: 'Fredoka One', cursive; font-size: 14px; line-height: 1.1; }
+  .kpi-label { font-size: 8.5px; font-weight: 800; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.4px; line-height: 1.1; }
+  .kpi-prize { font-family: 'Caveat', cursive; font-size: 13px; font-weight: 700; margin-top: 2px; line-height: 1.15; }
 
-  .deeds-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; margin-bottom: 36px; }
-  .deed { background: white; border-radius: 16px; padding: 12px 8px; text-align: center; border: 2.5px solid #FFCC80; box-shadow: 0 2px 0 #FFB74D; }
-  .deed-ico { font-size: 26px; margin-bottom: 4px; display: block; }
-  .deed-nm { font-size: 10.5px; font-weight: 800; color: #5D2F00; line-height: 1.25; min-height: 26px; display: flex; align-items: center; justify-content: center; }
-  .deed-pt { font-size: 11px; font-weight: 800; color: #F57C00; margin-top: 4px; }
+  .deeds-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; padding: 0 20px; margin-bottom: 20px; }
+  .deed {
+    background: white; border-radius: 10px; padding: 7px 4px 6px;
+    text-align: center; border: 1.5px solid #FFCC80; box-shadow: 0 1.5px 0 #FFB74D;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .deed-ico { font-size: 18px; line-height: 1; }
+  .deed-nm {
+    font-size: 9px; font-weight: 700; color: #5D2F00; line-height: 1.15;
+    min-height: 20px; display: flex; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .deed-pt { font-size: 9.5px; font-weight: 800; color: #F57C00; line-height: 1; }
   .deed-pt .star { color: #FFB300; }
+
+  /* Compact section title for secondary info */
+  .section-title-sm { font-size: 15px; margin: 0 0 10px; opacity: 0.8; }
+  .section-title-sm::before, .section-title-sm::after { font-size: 12px; margin: 0 6px; }
+
+  @media (min-width: 500px) {
+    .deeds-grid { grid-template-columns: repeat(6, 1fr); }
+  }
 
   .kids { padding: 0 20px; }
   .kid {
-    background: white; border-radius: 28px; padding: 20px; margin-bottom: 20px;
-    border: 4px solid; position: relative;
-    box-shadow: 0 6px 0 rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.06);
+    background: white; border-radius: 22px; padding: 14px 14px 12px; margin-bottom: 14px;
+    border: 3px solid; position: relative;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.06), 0 6px 20px rgba(0,0,0,0.05);
   }
-  .kid::before {
-    content: ''; position: absolute; top: 10px; right: 10px; width: 80px; height: 80px;
-    border-radius: 50%; opacity: 0.08; background: currentColor; pointer-events: none;
-  }
-  .kid-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; position: relative; }
+  .kid-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; position: relative; }
   .ava {
-    width: 64px; height: 64px; border-radius: 50%;
+    width: 54px; height: 54px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 32px; flex-shrink: 0; border: 4px solid white;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.1), 0 6px 16px rgba(0,0,0,0.12);
+    font-size: 26px; flex-shrink: 0; border: 3px solid white;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.08);
     animation: ava-idle 4s ease-in-out infinite;
   }
   @keyframes ava-idle {
@@ -191,14 +275,23 @@
     30% { transform: scale(1.3) rotate(-15deg); }
     60% { transform: scale(1.3) rotate(15deg); }
   }
-  .kid-id { flex: 1; }
-  .kid-name { font-family: 'Fredoka One', cursive; font-size: 24px; line-height: 1; }
-  .kid-title { font-family: 'Caveat', cursive; font-size: 17px; font-weight: 700; margin-top: 2px; opacity: 0.85; }
-  .kid-pts { text-align: right; position: relative; }
-  .pts-num { font-family: 'Fredoka One', cursive; font-size: 38px; line-height: 1; display: inline-block; transition: transform 0.3s; }
+  .kid-id { flex: 1; min-width: 0; }
+  .kid-name { font-family: 'Fredoka One', cursive; font-size: 20px; line-height: 1; }
+  .kid-title { font-family: 'Caveat', cursive; font-size: 15px; font-weight: 700; margin-top: 2px; opacity: 0.85; line-height: 1.2; }
+  .kid-pts {
+    position: relative; flex-shrink: 0;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%);
+    border: 2px solid #FFB74D;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(255, 152, 0, 0.12);
+  }
+  .pts-num { font-family: 'Fredoka One', cursive; font-size: 28px; line-height: 1; display: block; color: #E65100; transition: transform 0.3s; }
   .pts-num.pulse { animation: pts-pulse 0.5s ease; }
   @keyframes pts-pulse { 0% { transform: scale(1); } 40% { transform: scale(1.4); } 100% { transform: scale(1); } }
-  .pts-lbl { font-size: 10px; font-weight: 800; color: #8D6E63; text-transform: uppercase; letter-spacing: 0.5px; }
+  .pts-lbl { font-size: 8.5px; font-weight: 800; color: #BF360C; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; text-align: center; line-height: 1; }
 
   .float-pt {
     position: absolute; font-family: 'Fredoka One', cursive; font-size: 22px;
@@ -212,15 +305,14 @@
     100% { transform: translate(-10px,-60px) scale(1); opacity: 0; }
   }
 
-  .kpi-items { margin-bottom: 14px; }
-  .kpi-item { margin-bottom: 12px; }
-  .kpi-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 12px; font-weight: 800; }
-  .kpi-name { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-  .kpi-name .kpi-emoji { font-size: 16px; }
-  .kpi-prize-inline { font-family: 'Caveat', cursive; font-weight: 700; font-size: 15px; opacity: 0.85; }
-  .kpi-status-badge { font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 10px; background: #FFF3CC; color: #8D6E63; }
+  .kpi-items { margin-bottom: 10px; }
+  .kpi-item { margin-bottom: 8px; }
+  .kpi-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 11px; font-weight: 800; gap: 8px; }
+  .kpi-name { display: flex; align-items: center; gap: 5px; flex: 1; min-width: 0; justify-content: flex-end; }
+  .kpi-name .kpi-emoji { font-size: 14px; }
+  .kpi-status-badge { font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 10px; background: #FFF3CC; color: #8D6E63; white-space: nowrap; }
   .kpi-status-badge.done { background: linear-gradient(135deg, #66BB6A, #4CAF50); color: white; box-shadow: 0 2px 6px rgba(76,175,80,0.3); }
-  .track { background: #F0E4D0; border-radius: 20px; height: 16px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+  .track { background: #F0E4D0; border-radius: 20px; height: 12px; overflow: hidden; position: relative; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); }
   .fill {
     height: 100%; border-radius: 20px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative; overflow: hidden; background-size: 20px 20px;
@@ -232,14 +324,45 @@
 
   /* Tähtipuu (star tree) inside kid card */
   .kid-tree-wrap {
-    position: relative; margin: 6px -8px 14px;
-    padding: 14px 8px 10px;
-    border-radius: 20px; text-align: center;
+    position: relative; margin: 4px -6px 10px;
+    padding: 10px 6px 8px;
+    border-radius: 16px; text-align: center;
     background:
-      radial-gradient(ellipse at 50% 90%, rgba(255,202,40,0.22) 0%, transparent 65%),
-      radial-gradient(ellipse at 50% 20%, rgba(100,200,255,0.08) 0%, transparent 65%),
-      linear-gradient(180deg, rgba(255,248,225,0.4) 0%, rgba(255,236,179,0.25) 100%);
+      radial-gradient(ellipse at 50% 90%, rgba(255,202,40,0.2) 0%, transparent 65%),
+      linear-gradient(180deg, rgba(255,248,225,0.35) 0%, rgba(255,236,179,0.2) 100%);
     overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .kid-tree-wrap:active { transform: scale(0.98); }
+  .kid-tree-wrap.tree-burst .tree-star.visible { animation: tree-burst-spin 0.9s ease-in-out; }
+  @keyframes tree-burst-spin {
+    0% { transform: scale(1) rotate(0); }
+    50% { transform: scale(1.6) rotate(180deg); filter: drop-shadow(0 0 12px rgba(255,202,40,1)) brightness(1.4); }
+    100% { transform: scale(1) rotate(360deg); }
+  }
+  .tree-bubble {
+    position: absolute; transform: translateX(-50%);
+    background: linear-gradient(135deg, #FFCA28, #FF9800);
+    color: white; font-family: 'Fredoka One', cursive;
+    font-size: 14px; padding: 8px 16px; border-radius: 18px;
+    white-space: nowrap; pointer-events: none;
+    z-index: 9000;
+    box-shadow: 0 6px 16px rgba(255,152,0,0.4), 0 0 24px rgba(255,202,40,0.3);
+    border: 2px solid #F57C00;
+    animation: tree-bubble-pop 2.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .tree-bubble::after {
+    content: ''; position: absolute; top: -8px; left: 50%;
+    transform: translateX(-50%);
+    border: 7px solid transparent; border-bottom-color: #F57C00;
+  }
+  @keyframes tree-bubble-pop {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.6); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(-6px) scale(1.08); }
+    25% { transform: translateX(-50%) translateY(0) scale(1); }
+    80% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-20px) scale(0.95); }
   }
   .kid-tree-wrap::before {
     content: ''; position: absolute; top: 6px; right: 10px;
@@ -253,8 +376,8 @@
     color: #8D6E63; margin-bottom: 2px;
   }
   .kid-tree-svg {
-    width: 180px; height: 200px; max-width: 100%;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+    width: 150px; height: 170px; max-width: 100%;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.07));
   }
   .kid-tree-svg .tree-star {
     opacity: 0;
@@ -285,6 +408,166 @@
     font-family: 'Fredoka One', cursive; font-size: 14px;
     color: #8D6E63; margin-top: -4px;
   }
+  .deed-tallies {
+    display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;
+    margin-top: 10px; padding: 8px 6px 4px;
+    border-top: 1px dashed rgba(141,110,99,0.25);
+  }
+  .deed-tally {
+    display: inline-flex; align-items: center; gap: 2px;
+    background: rgba(255,255,255,0.65); border-radius: 10px;
+    padding: 3px 7px; font-size: 12px;
+    border: 1px solid rgba(255, 204, 128, 0.4);
+  }
+  .deed-tally-ico { font-size: 14px; }
+  .deed-tally-count {
+    font-family: 'Fredoka One', cursive;
+    color: #8D6E63; font-size: 11px;
+  }
+
+  /* New main row: tree on left, actions on right */
+  .kid-main-row {
+    display: flex; gap: 14px; align-items: stretch;
+    margin-top: 4px;
+  }
+  .kid-main-row .kid-tree-wrap {
+    flex: 0 0 150px; margin: 0;
+    padding: 8px 4px 6px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .kid-action-col {
+    flex: 1; min-width: 0;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .kid-action-col .btns-label {
+    font-size: 10px; font-weight: 800; color: #8D6E63;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    margin: 0;
+  }
+  .kid-action-col .btns-row {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+
+  /* Rich action button */
+  .dbtn {
+    display: flex; align-items: center; gap: 8px;
+    background: white; border: 2px solid; border-radius: 12px;
+    padding: 8px 10px; cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px; font-weight: 800;
+    text-align: left;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.06);
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+  .dbtn:hover { transform: translateY(-1px); }
+  .dbtn:active { transform: translateY(1px); box-shadow: 0 1px 0 rgba(0,0,0,0.06); }
+  .dbtn-ico { font-size: 18px; flex-shrink: 0; }
+  .dbtn-nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dbtn-pt {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #FFCA28, #FF9800);
+    color: white;
+    padding: 2px 8px; border-radius: 10px;
+    font-size: 11px; font-family: 'Fredoka One', cursive;
+  }
+
+  .undo-btn-compact {
+    background: transparent; border: 1.5px solid #D7C9B2;
+    color: #8D6E63; padding: 6px 10px; border-radius: 10px;
+    font-size: 11px; font-weight: 700; cursor: pointer;
+    margin-top: 2px;
+    transition: all 0.15s;
+  }
+  .undo-btn-compact:hover:not(:disabled) { background: #F5EDD8; border-color: #F57C00; color: #F57C00; }
+  .undo-btn-compact:disabled { opacity: 0.35; cursor: default; }
+
+  /* Compact next-KPI indicator */
+  .next-kpi {
+    display: flex; align-items: center; gap: 12px;
+    margin-top: 12px; padding: 10px 12px;
+    background: linear-gradient(180deg, rgba(255,243,204,0.5) 0%, rgba(255,224,130,0.3) 100%);
+    border: 1.5px solid rgba(255, 152, 0, 0.25);
+    border-radius: 14px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .next-kpi:hover { background: linear-gradient(180deg, rgba(255,243,204,0.8) 0%, rgba(255,224,130,0.5) 100%); border-color: rgba(255,152,0,0.5); }
+  .next-kpi:active { transform: scale(0.99); }
+  .next-kpi.all-done {
+    background: linear-gradient(180deg, rgba(200,230,201,0.5) 0%, rgba(165,214,167,0.3) 100%);
+    border-color: rgba(76,175,80,0.4);
+  }
+  .nk-icon {
+    font-size: 28px; flex-shrink: 0;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.08));
+  }
+  .nk-body { flex: 1; min-width: 0; }
+  .nk-title {
+    font-family: 'Fredoka One', cursive; font-size: 13px;
+    color: #5D2F00; line-height: 1.15;
+  }
+  .nk-prize { font-family: 'Caveat', cursive; font-weight: 700; font-size: 14px; color: #8D6E63; }
+  .nk-track-wrap {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 6px;
+  }
+  .nk-track {
+    flex: 1; height: 8px; border-radius: 5px;
+    background: rgba(141,110,99,0.2); overflow: hidden;
+  }
+  .nk-fill {
+    height: 100%; border-radius: 5px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .nk-left {
+    font-family: 'Fredoka One', cursive; font-size: 11px;
+    color: #F57C00; white-space: nowrap;
+  }
+  .nk-sub {
+    font-size: 10px; color: #8D6E63; margin-top: 3px;
+    font-weight: 700;
+  }
+  .nk-arrow {
+    font-size: 22px; color: #BFA37A;
+    font-family: 'Fredoka One', cursive; flex-shrink: 0;
+  }
+
+  /* KPI modal */
+  .kpi-modal-inner { max-width: 420px; }
+  .kpi-modal-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px; margin-bottom: 8px;
+    background: #FFF8E1; border: 2px solid #FFCC80;
+    border-radius: 14px;
+  }
+  .kpi-modal-item.done {
+    background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+    border-color: #66BB6A;
+  }
+  .kpi-modal-icon {
+    font-size: 30px; flex-shrink: 0;
+  }
+  .kpi-modal-body { flex: 1; min-width: 0; }
+  .kpi-modal-title {
+    font-family: 'Fredoka One', cursive; font-size: 14px;
+    color: #5D2F00;
+  }
+  .kpi-modal-prize {
+    font-family: 'Caveat', cursive; font-weight: 700;
+    font-size: 15px; color: #8D6E63; margin-top: 2px;
+  }
+  .kpi-modal-track {
+    height: 8px; background: rgba(141,110,99,0.2);
+    border-radius: 5px; overflow: hidden; margin-top: 6px;
+  }
+  .kpi-modal-fill {
+    height: 100%; border-radius: 5px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .kpi-modal-status {
+    font-size: 11px; color: #8D6E63; margin-top: 4px;
+    font-weight: 700;
+  }
+  .kpi-modal-item.done .kpi-modal-status { color: #2E7D32; }
 
   .btns-section { margin-top: 14px; padding-top: 16px; border-top: 2px dashed #EAE0D5; }
   .btns-label { font-size: 11px; font-weight: 800; color: #8D6E63; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -396,21 +679,21 @@
   .step-bar.done { background: #66BB6A; }
 
   .ob-card {
-    background: white; border: 3px solid #F9A825; border-radius: 28px;
-    padding: 28px 24px;
-    box-shadow: 0 6px 0 #F57C00, 0 16px 40px rgba(120,60,0,0.15);
-    margin-bottom: 20px;
+    background: white; border: 3px solid #F9A825; border-radius: 24px;
+    padding: 20px 18px;
+    box-shadow: 0 5px 0 #F57C00, 0 12px 28px rgba(120,60,0,0.12);
+    margin-bottom: 16px;
   }
-  .ob-card h2 { font-family: 'Fredoka One', cursive; font-size: 24px; color: #5D2F00; text-align: center; margin-bottom: 8px; }
+  .ob-card h2 { font-family: 'Fredoka One', cursive; font-size: 22px; color: #5D2F00; text-align: center; margin-bottom: 6px; }
   .ob-card .ob-hint {
-    font-family: 'Caveat', cursive; font-size: 19px; font-weight: 600;
-    color: #8D6E63; text-align: center; margin-bottom: 20px; line-height: 1.4;
+    font-family: 'Caveat', cursive; font-size: 17px; font-weight: 600;
+    color: #8D6E63; text-align: center; margin-bottom: 14px; line-height: 1.35;
   }
   .ob-intro-text {
-    font-family: 'Caveat', cursive; font-size: 20px; font-weight: 600;
-    color: #5D2F00; line-height: 1.6; text-align: center;
+    font-family: 'Caveat', cursive; font-size: 19px; font-weight: 600;
+    color: #5D2F00; line-height: 1.5; text-align: center;
   }
-  .ob-intro-text p { margin-bottom: 10px; }
+  .ob-intro-text p { margin-bottom: 8px; }
   .ob-intro-text .hl { background: linear-gradient(180deg, transparent 60%, #FFD54F 60%); padding: 0 3px; }
   .ob-emoji-big {
     font-size: 72px; text-align: center; margin-bottom: 10px;
@@ -418,99 +701,278 @@
     animation: star-spin 4s ease-in-out infinite;
   }
 
-  /* Onboarding Step 1 scene */
+  /* Onboarding Step 1 scene — Hopeapilvi with Kuutonttu */
   .ob-scene-1 {
-    position: relative; width: 100%; height: 130px;
-    margin: -8px 0 16px; overflow: hidden;
+    position: relative; width: 100%; height: 200px;
+    margin: -4px 0 14px; overflow: hidden;
     background:
-      radial-gradient(ellipse at 50% 110%, rgba(255,202,40,0.3) 0%, transparent 60%),
-      linear-gradient(180deg, rgba(255,237,175,0.3) 0%, rgba(255,248,225,0.5) 100%);
-    border-radius: 20px;
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(176, 210, 244, 0.35) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 95%, rgba(255,202,40,0.25) 0%, transparent 60%),
+      linear-gradient(180deg, #E8F1FA 0%, #F5F3E8 55%, #FFF1D3 100%);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
   }
   .ob-scene-moon {
-    position: absolute; top: 14px; right: 22px; width: 40px; height: 40px;
+    position: absolute; top: 14px; right: 20px; width: 32px; height: 32px;
     background: radial-gradient(circle at 35% 35%, #FFF9C4, #FFE082);
-    border-radius: 50%; box-shadow: 0 0 28px rgba(255,235,150,0.7);
+    border-radius: 50%; box-shadow: 0 0 20px rgba(255,235,150,0.6);
     animation: moon-glow 3s ease-in-out infinite;
   }
-  .ob-scene-elf {
-    position: absolute; animation: elf-float 4s ease-in-out infinite;
-    filter: drop-shadow(0 4px 6px rgba(120,60,0,0.2));
+
+  /* Tiny background sky stars */
+  .sky-star {
+    position: absolute; font-size: 10px; opacity: 0.5;
+    animation: scene-twinkle 3s ease-in-out infinite;
   }
-  .ob-elf-1 { top: 18px; left: 32px; animation-delay: 0s; }
-  .ob-elf-2 { top: 36px; right: 80px; animation-delay: -1.5s; }
-  @keyframes elf-float {
-    0%, 100% { transform: translateY(0) rotate(-3deg); }
-    50% { transform: translateY(-8px) rotate(3deg); }
-  }
-  .ob-scene-tree {
-    position: absolute; bottom: -6px;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
-  }
-  .ob-tree-l { left: 8px; animation: tree-sway 5s ease-in-out infinite; }
-  .ob-tree-r { right: 12px; animation: tree-sway 5s ease-in-out infinite -2s; }
-  @keyframes tree-sway {
-    0%, 100% { transform: rotate(-1.5deg); }
-    50% { transform: rotate(1.5deg); }
-  }
-  .ob-scene-star {
-    position: absolute; font-size: 16px;
-    animation: scene-twinkle 2s ease-in-out infinite;
-  }
-  .ob-star-a { top: 10px; left: 46%; font-size: 14px; animation-delay: 0s; }
-  .ob-star-b { top: 32px; left: 68%; font-size: 18px; animation-delay: -0.5s; }
-  .ob-star-c { top: 56px; left: 52%; font-size: 12px; animation-delay: -1s; }
-  .ob-star-d { top: 20px; left: 20%; font-size: 14px; animation-delay: -1.5s; }
+  .ss-1 { top: 18px; left: 40px; }
+  .ss-2 { top: 32px; left: 24%; font-size: 14px; color: #F57C00; animation-delay: -0.7s; }
+  .ss-3 { top: 50px; right: 26%; font-size: 14px; color: #F57C00; animation-delay: -1.4s; }
+  .ss-4 { top: 26px; right: 14%; animation-delay: -2.1s; }
   @keyframes scene-twinkle {
-    0%, 100% { opacity: 0.4; transform: scale(0.8) rotate(0deg); }
+    0%,100% { opacity: 0.3; transform: scale(0.8) rotate(0); }
+    50% { opacity: 0.9; transform: scale(1.15) rotate(60deg); }
+  }
+
+  /* Interactive Hopeapilvi (silver cloud) with elf on top */
+  .ob-cloud {
+    position: relative; z-index: 3;
+    background: transparent; border: none; padding: 0;
+    cursor: pointer;
+    animation: cloud-float 5s ease-in-out infinite;
+    transition: transform 0.15s;
+    margin-top: 10px;
+  }
+  .ob-cloud:active { transform: scale(0.97); }
+  .ob-cloud.tapped { animation: cloud-tapped 0.6s ease-out; }
+  @keyframes cloud-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes cloud-tapped {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.06) translateY(2px); filter: drop-shadow(0 0 20px rgba(255,235,150,0.9)); }
+    100% { transform: scale(1) translateY(0); }
+  }
+  .ob-cloud-svg {
+    filter: drop-shadow(0 8px 16px rgba(140, 160, 180, 0.25)) drop-shadow(0 0 18px rgba(255, 255, 255, 0.4));
+  }
+  .cloud-halo {
+    transform-origin: 90px 55px;
+    animation: cloud-halo-pulse 3s ease-in-out infinite;
+  }
+  @keyframes cloud-halo-pulse {
+    0%,100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+  .cloud-elf {
+    position: absolute; top: -16px; left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 3px 5px rgba(120,60,0,0.25));
+    animation: cloud-elf-idle 4s ease-in-out infinite;
+  }
+  @keyframes cloud-elf-idle {
+    0%, 100% { transform: translateX(-50%) translateY(0) rotate(-3deg); }
+    50% { transform: translateX(-50%) translateY(-3px) rotate(3deg); }
+  }
+  .ob-cloud-hint {
+    position: absolute; top: 55%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Caveat', cursive;
+    font-size: 16px; font-weight: 700;
+    color: #B88A3E;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+    pointer-events: none;
+    animation: cloud-hint-breathe 2.2s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  @keyframes cloud-hint-breathe {
+    0%,100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+  }
+
+  /* Little tree below cloud */
+  .ob-below-tree {
+    position: absolute; bottom: 4px; left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.1));
+    animation: tree-sway 5s ease-in-out infinite;
+  }
+  @keyframes tree-sway {
+    0%, 100% { transform: translateX(-50%) rotate(-1.5deg); }
+    50% { transform: translateX(-50%) rotate(1.5deg); }
+  }
+  #tree-star-drop {
+    transition: opacity 0.8s ease, fill 0.8s ease;
+  }
+  #tree-star-drop.lit {
+    opacity: 1;
+    fill: #FFEB3B;
+    filter: drop-shadow(0 0 4px rgba(255,235,100,1));
+  }
+
+  /* Falling star animation (spawned on cloud tap) */
+  .falling-star {
+    position: absolute; pointer-events: none; z-index: 10;
+    font-size: 22px;
+    animation: fall-to-tree 1.4s cubic-bezier(0.55, 0, 0.3, 1) forwards;
+    filter: drop-shadow(0 0 8px rgba(255,235,100,0.9));
+  }
+  @keyframes fall-to-tree {
+    0% { opacity: 0; transform: translate(var(--x-start), var(--y-start)) scale(0.5) rotate(0); }
+    15% { opacity: 1; transform: translate(var(--x-start), var(--y-start)) scale(1.2) rotate(45deg); }
+    90% { opacity: 1; }
+    100% {
+      opacity: 0;
+      transform: translate(var(--x-end), var(--y-end)) scale(0.8) rotate(720deg);
+    }
+  }
     50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
   }
 
-  /* Onboarding Step 2 & 3 scene */
-  .ob-scene-2, .ob-scene-3 {
-    position: relative; width: 100%; height: 60px;
-    margin: -8px 0 4px; overflow: hidden;
-  }
-  .ob-flutter {
-    position: absolute; font-size: 24px;
-    filter: drop-shadow(0 3px 5px rgba(120,60,0,0.2));
-    animation: flutter-dance 4s ease-in-out infinite;
-  }
-  .ob-flutter-1 { top: 8px; left: 15%; animation-delay: 0s; }
-  .ob-flutter-2 { top: 20px; left: 50%; animation-delay: -1.3s; font-size: 22px; }
-  .ob-flutter-3 { top: 10px; right: 15%; animation-delay: -2.6s; }
-  @keyframes flutter-dance {
-    0%, 100% { transform: translate(0, 0) rotate(-8deg); }
-    25% { transform: translate(20px, -6px) rotate(8deg); }
-    50% { transform: translate(-10px, 4px) rotate(-5deg); }
-    75% { transform: translate(15px, -8px) rotate(10deg); }
-  }
-  .ob-firefly {
-    position: absolute; width: 5px; height: 5px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,230,120,1) 0%, rgba(255,200,50,0.4) 60%, transparent 100%);
-    box-shadow: 0 0 8px rgba(255,220,100,0.9);
-    animation: firefly-dance 5s ease-in-out infinite;
-  }
-  .ob-firefly-a { top: 30px; left: 30%; animation-delay: 0s; }
-  .ob-firefly-b { top: 14px; left: 70%; animation-delay: -1.5s; }
-  .ob-firefly-c { top: 40px; left: 85%; animation-delay: -3s; }
-  @keyframes firefly-dance {
-    0%, 100% { transform: translate(0, 0); opacity: 0.6; }
-    50% { transform: translate(20px, -15px); opacity: 1; }
-  }
-
-  /* Step 4 Finale */
+  /* Step 5 Finale — light, breathable layout */
   .ob-card-finale {
     background: linear-gradient(180deg, #FFF8E1 0%, #FFF3D6 100%);
+    border-color: #F9A825;
     position: relative; overflow: hidden;
   }
+  .finale-scene-light {
+    position: relative; width: 100%; height: 160px;
+    margin-bottom: 8px; overflow: hidden;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 50%, rgba(255,235,150,0.25) 0%, transparent 60%);
+  }
+  .finale-light-moon {
+    position: absolute; top: 14px; right: 20px;
+    width: 44px; height: 44px;
+    background: radial-gradient(circle at 35% 35%, #FFF9C4, #FFE082);
+    border-radius: 50%;
+    box-shadow: 0 0 26px rgba(255,235,150,0.7);
+    animation: moon-glow 3s ease-in-out infinite;
+  }
+  .finale-tw {
+    position: absolute; color: #FFB300; font-size: 14px;
+    animation: scene-twinkle 2.8s ease-in-out infinite;
+    opacity: 0.7;
+  }
+  .finale-tw.tw1 { top: 22px; left: 16%; animation-delay: 0s; }
+  .finale-tw.tw2 { top: 50px; left: 66%; font-size: 11px; animation-delay: -0.9s; }
+  .finale-tw.tw3 { top: 16px; left: 46%; font-size: 12px; animation-delay: -1.5s; }
+  .finale-tw.tw4 { top: 70px; left: 26%; font-size: 11px; animation-delay: -2.2s; }
+
+  .finale-light-tree {
+    position: absolute; bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 110px; height: 130px;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.12));
+    animation: finale-tree-bob 5s ease-in-out infinite;
+  }
+  @keyframes finale-tree-bob {
+    0%,100% { transform: translateX(-50%) translateY(0) rotate(-1deg); }
+    50% { transform: translateX(-50%) translateY(-2px) rotate(1deg); }
+  }
+  .finale-star {
+    transform-origin: center; transform-box: fill-box;
+    filter: drop-shadow(0 0 4px rgba(255,202,40,0.8));
+    animation: finale-star-pop 2.5s ease-in-out infinite;
+  }
+  @keyframes finale-star-pop {
+    0%,100% { transform: scale(0.9); opacity: 0.85; }
+    50% { transform: scale(1.2); opacity: 1; }
+  }
+  .finale-light-elf-l, .finale-light-elf-r {
+    position: absolute; top: 22px;
+    filter: drop-shadow(0 4px 6px rgba(120,60,0,0.2));
+  }
+  .finale-light-elf-l { left: 14px; animation: elf-float 4s ease-in-out infinite; }
+  .finale-light-elf-r { right: 60px; animation: elf-float 4s ease-in-out infinite -2s; }
+
+  .finale-heading {
+    font-family: 'Fredoka One', cursive;
+    font-size: 26px; color: #5D2F00;
+    text-align: center; margin: 0 0 12px;
+  }
+
+  .finale-lead {
+    font-family: 'Caveat', cursive;
+    font-size: 19px; font-weight: 600;
+    color: #5D2F00;
+    text-align: center; line-height: 1.5;
+    margin: 0 8px 18px;
+  }
+  .finale-lead .hl {
+    background: linear-gradient(180deg, transparent 60%, #FFD54F 60%);
+    padding: 0 4px;
+  }
+
+  /* Summary card — clean and airy */
+  .finale-summary-card {
+    margin: 0 4px 18px;
+    padding: 18px 18px 14px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px dashed rgba(245, 124, 0, 0.35);
+    border-radius: 20px;
+    text-align: center;
+  }
+  .finale-summary-card .fs-label {
+    display: block;
+    font-family: 'Caveat', cursive;
+    font-size: 16px; font-weight: 700;
+    color: #8D6E63;
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+  .finale-summary-card .fs-kids {
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px; line-height: 1.9;
+    color: #5D2F00;
+    margin-bottom: 12px;
+  }
+  .finale-summary-card .fs-kids .fs-kid {
+    display: inline-block;
+    margin: 0 4px;
+    white-space: nowrap;
+  }
+  .finale-summary-card .fs-meta {
+    display: flex; justify-content: center; gap: 24px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(141,110,99,0.3);
+  }
+  .finale-summary-card .fs-meta-item {
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px; color: #8D6E63; font-weight: 700;
+    letter-spacing: 0.4px; text-transform: uppercase;
+  }
+  .finale-summary-card .fs-meta-num {
+    display: block;
+    font-family: 'Fredoka One', cursive;
+    font-size: 22px; color: #F57C00; line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .finale-closing {
+    font-family: 'Caveat', cursive;
+    font-size: 18px; font-weight: 700;
+    color: #F57C00;
+    text-align: center;
+    margin: 0 8px 16px;
+    line-height: 1.3;
+  }
+
+  @media (min-width: 560px) {
+    .finale-scene-light { height: 190px; }
+    .finale-light-tree { width: 130px; height: 150px; }
+    .finale-heading { font-size: 30px; }
+  }
+
   .ob-finale-scene {
-    position: relative; width: 100%; height: 180px;
-    margin: -8px 0 14px;
+    position: relative; width: 100%; height: 140px;
+    margin: -6px 0 10px;
     background:
       radial-gradient(ellipse at 50% 0%, rgba(255,235,150,0.35) 0%, transparent 60%),
       radial-gradient(ellipse at 50% 110%, rgba(255,202,40,0.25) 0%, transparent 50%);
-    border-radius: 20px; overflow: hidden;
+    border-radius: 16px; overflow: hidden;
   }
   .ob-finale-moon {
     position: absolute; top: 16px; right: 28px; width: 44px; height: 44px;
@@ -546,37 +1008,77 @@
   .ob-sp-2 { top: 60px; left: 70%; font-size: 20px; animation-delay: -0.6s; }
   .ob-sp-3 { top: 90px; left: 22%; font-size: 16px; animation-delay: -1.2s; }
   .ob-sp-4 { top: 40px; left: 52%; font-size: 14px; animation-delay: -1.8s; }
-  .ob-finale-text { padding: 0 4px; }
-  .ob-whisper {
-    font-family: 'Caveat', cursive; font-size: 20px; font-weight: 700;
-    color: #8D6E63; text-align: center; margin-top: 8px;
+  .ob-finale-text {
+    font-family: 'Caveat', cursive;
+    font-size: 20px; font-weight: 600;
+    color: #5D2F00; line-height: 1.5; text-align: center;
+    margin: 0 6px 18px;
+  }
+  .ob-finale-text p { margin: 0; }
+  .ob-finale-text .hl { background: linear-gradient(180deg, transparent 60%, #FFD54F 60%); padding: 0 3px; }
+
+  /* Adventurer summary card */
+  .ob-finale-summary {
+    margin: 0 4px 20px;
+    padding: 16px 16px;
+    background: linear-gradient(180deg, rgba(255,248,225,0.9) 0%, rgba(255,236,179,0.75) 100%);
+    border: 2px dashed rgba(245,124,0,0.4);
+    border-radius: 18px;
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px; line-height: 1.7;
+    color: #5D2F00;
+  }
+  .ob-finale-summary .fs-label {
+    display: block;
+    font-family: 'Caveat', cursive; font-size: 17px; font-weight: 700;
+    color: #8D6E63; margin-bottom: 6px;
+  }
+  .ob-finale-summary .fs-kids {
+    font-family: 'Fredoka One', cursive; font-size: 15px;
+    line-height: 1.8; margin-bottom: 10px;
+  }
+  .ob-finale-summary .fs-meta {
+    display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px dashed rgba(141,110,99,0.3);
+    font-size: 12px; color: #8D6E63; font-weight: 700;
+  }
+  .ob-finale-summary .fs-meta b { color: #F57C00; font-family: 'Fredoka One', cursive; font-size: 15px; margin-right: 3px; }
+
+  .ob-finale-whisper {
+    font-family: 'Caveat', cursive; font-size: 19px; font-weight: 700;
+    color: #F57C00; text-align: center;
+    margin: 0 6px 16px;
+    opacity: 0.9;
   }
 
   .ob-kid-row {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 10px;
     background: #FFF8E1; border: 2px solid #FFCC80;
-    border-radius: 18px; padding: 12px; margin-bottom: 10px;
+    border-radius: 14px; padding: 8px; margin-bottom: 7px;
   }
   .ob-kid-avatar {
-    width: 56px; height: 56px; border-radius: 50%;
+    width: 48px; height: 48px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 28px; background: white; border: 3px solid #FFCC80;
+    font-size: 24px; background: white; border: 2.5px solid #FFCC80;
     cursor: pointer; flex-shrink: 0;
-    box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.08);
     transition: transform 0.15s;
   }
   .ob-kid-avatar:active { transform: scale(0.95); }
   .ob-kid-fields { flex: 1; min-width: 0; }
   .ob-name-input {
     width: 100%; border: 2px solid #FFCC80; background: white;
-    border-radius: 12px; padding: 8px 12px; font-size: 15px; font-weight: 700;
+    border-radius: 10px; padding: 6px 10px; font-size: 14px; font-weight: 700;
     color: #5D2F00; font-family: 'Nunito', sans-serif;
+    box-sizing: border-box;
   }
   .ob-name-input:focus { outline: none; border-color: #F57C00; }
   .ob-role-line {
-    font-family: 'Caveat', cursive; font-size: 16px;
-    color: #8D6E63; margin-top: 4px; font-weight: 700;
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    font-family: 'Caveat', cursive; font-size: 15px;
+    color: #8D6E63; margin-top: 3px; font-weight: 700;
+    display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
   }
   .ob-role-tap { color: #F57C00; text-decoration: underline; cursor: pointer; }
   .ob-remove-btn {
@@ -695,17 +1197,19 @@
   }
   .modal h3 { font-family: 'Fredoka One', cursive; font-size: 20px; color: #5D2F00; text-align: center; margin-bottom: 16px; }
 
-  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .role-card {
-    background: white; border: 2.5px solid #FFCC80;
-    border-radius: 16px; padding: 12px; cursor: pointer;
+    background: white; border: 2px solid #FFCC80;
+    border-radius: 14px; padding: 10px 6px; cursor: pointer;
     text-align: center; transition: transform 0.15s;
+    min-height: 96px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
   }
-  .role-card:active { transform: scale(0.96); }
-  .role-card.selected { border-color: #F57C00; background: #FFF3CC; box-shadow: 0 4px 0 #F57C00; }
-  .role-card .r-ico { font-size: 36px; display: block; margin-bottom: 4px; }
-  .role-card .r-name { font-family: 'Fredoka One', cursive; font-size: 14px; color: #5D2F00; }
-  .role-card .r-bio { font-family: 'Caveat', cursive; font-size: 13px; color: #8D6E63; margin-top: 2px; line-height: 1.2; font-weight: 600; }
+  .role-card:active { transform: scale(0.95); }
+  .role-card.selected { border-color: #F57C00; background: #FFF3CC; box-shadow: 0 3px 0 #F57C00; }
+  .role-card .r-ico { font-size: 30px; display: block; margin-bottom: 4px; line-height: 1; }
+  .role-card .r-name { font-family: 'Fredoka One', cursive; font-size: 12px; color: #5D2F00; line-height: 1.15; }
+  .role-card .r-bio { font-family: 'Caveat', cursive; font-size: 12px; color: #8D6E63; margin-top: 3px; line-height: 1.15; font-weight: 600; }
 
   .emoji-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
   .emoji-card {
@@ -734,11 +1238,19 @@
   }
   .settings-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #F57C00; }
 
+  @media (max-width: 460px) {
+    .kid-main-row { flex-direction: column; gap: 10px; }
+    .kid-main-row .kid-tree-wrap { flex: 0 0 auto; width: 100%; }
+    .kid-main-row .kid-tree-svg { width: 140px; height: 160px; }
+    .kid-name { font-size: 18px; }
+    .kid { padding: 12px; }
+  }
+
   @media (min-width: 700px) {
     .container { padding: 0 16px 60px; }
     .banner { border-radius: 0 0 40px 40px; }
     .banner-title { font-size: 54px; }
-    .role-grid { grid-template-columns: repeat(3, 1fr); }
+    .role-grid { grid-template-columns: repeat(4, 1fr); }
   }
 
   /* ============================================================
@@ -1052,7 +1564,7 @@
       <span class="intro-btn-spark">✨</span>
     </button>
 
-    <p class="intro-whisper">tapaile kuutonttuja · kerää tähtiä · kasvata oma Tähtipuu</p>
+    <p class="intro-whisper">tapaa kuutonttuja · kerää tähtiä · kasvata oma Tähtipuu</p>
   </div>
 
   <!-- Zoom transition overlay -->
@@ -1070,52 +1582,66 @@
 
   <div class="ob-card" id="ob-step-1">
     <div class="ob-scene-1">
+      <!-- Night sky gradient with sparkle stars -->
+      <span class="sky-star ss-1">✨</span>
+      <span class="sky-star ss-2">·</span>
+      <span class="sky-star ss-3">·</span>
+      <span class="sky-star ss-4">✨</span>
+
+      <!-- Moon in corner -->
       <div class="ob-scene-moon"></div>
-      <div class="ob-scene-elf ob-elf-1">
-        <svg viewBox="0 0 50 60" width="46" height="55">
-          <ellipse cx="25" cy="44" rx="14" ry="13" fill="#FFE0B2"/>
-          <circle cx="20" cy="42" r="1.5" fill="#3D2914"/>
-          <circle cx="30" cy="42" r="1.5" fill="#3D2914"/>
-          <path d="M21 47 Q25 50 29 47" stroke="#8D6E63" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-          <path d="M10 32 L25 6 L40 32 Z" fill="#F57C00"/>
-          <circle cx="40" cy="8" r="3" fill="#FFCA28"/>
-          <circle cx="41" cy="7" r="1" fill="#FFF59D"/>
+
+      <!-- ⭐ CENTER: Hopeapilvi (silver cloud) with Kuutonttu, tappable ⭐ -->
+      <button class="ob-cloud" onclick="obCloudTapped(event)" aria-label="Napauta Hopeapilveä">
+        <svg viewBox="0 0 180 100" width="180" height="100" class="ob-cloud-svg">
+          <defs>
+            <radialGradient id="cloudGrad" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+              <stop offset="70%" stop-color="#F0F4F8" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#CFD8DC" stop-opacity="0.85"/>
+            </radialGradient>
+            <radialGradient id="cloudGlow" cx="50%" cy="50%" r="60%">
+              <stop offset="60%" stop-color="rgba(255,235,150,0.45)" stop-opacity="0.45"/>
+              <stop offset="100%" stop-color="rgba(255,235,150,0)" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <!-- Halo glow behind cloud -->
+          <ellipse cx="90" cy="55" rx="90" ry="48" fill="url(#cloudGlow)" class="cloud-halo"/>
+          <!-- Cloud body — fluffy shape -->
+          <g filter="url(#cloudShadow)">
+            <ellipse cx="55" cy="62" rx="30" ry="20" fill="url(#cloudGrad)"/>
+            <ellipse cx="90" cy="50" rx="38" ry="26" fill="url(#cloudGrad)"/>
+            <ellipse cx="125" cy="60" rx="30" ry="22" fill="url(#cloudGrad)"/>
+            <ellipse cx="75" cy="68" rx="22" ry="14" fill="url(#cloudGrad)"/>
+            <ellipse cx="108" cy="70" rx="22" ry="14" fill="url(#cloudGrad)"/>
+          </g>
+          <!-- Subtle silver edge highlight -->
+          <ellipse cx="92" cy="42" rx="32" ry="10" fill="white" opacity="0.7"/>
+        </svg>
+        <!-- Kuutonttu sitting on top -->
+        <div class="cloud-elf">
+          <svg viewBox="0 0 50 60" width="40" height="48">
+            <ellipse cx="25" cy="44" rx="13" ry="12" fill="#FFE0B2"/>
+            <circle cx="20" cy="42" r="1.5" fill="#3D2914"/>
+            <circle cx="30" cy="42" r="1.5" fill="#3D2914"/>
+            <path d="M21 47 Q25 50 29 47" stroke="#8D6E63" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <path d="M10 32 L25 6 L40 32 Z" fill="#F57C00"/>
+            <circle cx="40" cy="8" r="3" fill="#FFCA28"/>
+          </svg>
+        </div>
+        <span class="ob-cloud-hint">napauta</span>
+      </button>
+
+      <!-- Little Tähtipuu below the cloud (catches falling stars) -->
+      <div class="ob-below-tree">
+        <svg viewBox="0 0 60 80" width="50" height="64">
+          <rect x="27" y="50" width="6" height="26" fill="#5D4037" rx="2"/>
+          <ellipse cx="30" cy="38" rx="22" ry="22" fill="#2E7D32"/>
+          <ellipse cx="22" cy="32" rx="9" ry="11" fill="#388E3C"/>
+          <ellipse cx="38" cy="30" rx="9" ry="11" fill="#388E3C"/>
+          <polygon id="tree-star-drop" points="30,36 33,42 39,42 34,46 36,52 30,48 24,52 26,46 21,42 27,42" fill="#FFCA28" opacity="0.6"/>
         </svg>
       </div>
-      <div class="ob-scene-elf ob-elf-2">
-        <svg viewBox="0 0 50 60" width="38" height="46">
-          <ellipse cx="25" cy="44" rx="12" ry="11" fill="#F8BBD0"/>
-          <circle cx="21" cy="42" r="1.3" fill="#3D2914"/>
-          <circle cx="29" cy="42" r="1.3" fill="#3D2914"/>
-          <path d="M22 47 Q25 49 28 47" stroke="#8D6E63" stroke-width="1" fill="none" stroke-linecap="round"/>
-          <path d="M12 34 L25 10 L38 34 Z" fill="#AB47BC"/>
-          <circle cx="38" cy="12" r="2.5" fill="#FFCA28"/>
-        </svg>
-      </div>
-      <div class="ob-scene-tree ob-tree-l">
-        <svg viewBox="0 0 60 90" width="48" height="72">
-          <rect x="26" y="55" width="8" height="30" fill="#5D4037" rx="2"/>
-          <ellipse cx="30" cy="40" rx="24" ry="25" fill="#2E7D32"/>
-          <ellipse cx="22" cy="35" rx="10" ry="12" fill="#388E3C"/>
-          <ellipse cx="38" cy="32" rx="10" ry="12" fill="#388E3C"/>
-          <polygon points="30,28 33,35 40,35 34.5,39 36.5,46 30,42 23.5,46 25.5,39 20,35 27,35" fill="#FFCA28" opacity="0.9"/>
-          <polygon points="18,42 20,46 24,46 21,48 22,52 18,50 14,52 15,48 12,46 16,46" fill="#FFCA28" opacity="0.8"/>
-          <polygon points="42,44 44,48 48,48 45,50 46,54 42,52 38,54 39,50 36,48 40,48" fill="#FFCA28" opacity="0.8"/>
-        </svg>
-      </div>
-      <div class="ob-scene-tree ob-tree-r">
-        <svg viewBox="0 0 60 90" width="42" height="64">
-          <rect x="26" y="55" width="8" height="30" fill="#5D4037" rx="2"/>
-          <ellipse cx="30" cy="40" rx="22" ry="24" fill="#388E3C"/>
-          <ellipse cx="24" cy="33" rx="9" ry="11" fill="#2E7D32"/>
-          <ellipse cx="36" cy="36" rx="9" ry="11" fill="#2E7D32"/>
-          <polygon points="30,30 33,37 40,37 34.5,41 36.5,48 30,44 23.5,48 25.5,41 20,37 27,37" fill="#FFCA28" opacity="0.9"/>
-        </svg>
-      </div>
-      <div class="ob-scene-star ob-star-a">✨</div>
-      <div class="ob-scene-star ob-star-b">⭐</div>
-      <div class="ob-scene-star ob-star-c">✨</div>
-      <div class="ob-scene-star ob-star-d">💫</div>
     </div>
     <h2>Tervetuloa Taikametsään</h2>
     <div class="ob-intro-text">
@@ -1128,14 +1654,6 @@
   </div>
 
   <div class="ob-card" id="ob-step-2" style="display:none;">
-    <div class="ob-scene-2">
-      <span class="ob-flutter ob-flutter-1">🦋</span>
-      <span class="ob-flutter ob-flutter-2">🐞</span>
-      <span class="ob-flutter ob-flutter-3">🦋</span>
-      <span class="ob-firefly ob-firefly-a"></span>
-      <span class="ob-firefly ob-firefly-b"></span>
-      <span class="ob-firefly ob-firefly-c"></span>
-    </div>
     <h2>Ketkä lähtevät matkalle?</h2>
     <div class="ob-hint">Anna jokaiselle seikkailijalle nimi ja valitse rooli Taikametsässä. ✨</div>
     <div id="ob-kids-list"></div>
@@ -1147,13 +1665,6 @@
   </div>
 
   <div class="ob-card" id="ob-step-3" style="display:none;">
-    <div class="ob-scene-3">
-      <span class="ob-flutter ob-flutter-1">🍄</span>
-      <span class="ob-flutter ob-flutter-2">🌿</span>
-      <span class="ob-flutter ob-flutter-3">🌸</span>
-      <span class="ob-firefly ob-firefly-a"></span>
-      <span class="ob-firefly ob-firefly-b"></span>
-    </div>
     <h2>Hyvät teot</h2>
     <div class="ob-hint">Mitkä teot tuovat uuden tähden puuhun? Napauta kuvaketta vaihtaaksesi, ja valitse pistemäärä. 🌟</div>
     <div id="ob-deeds-list"></div>
@@ -1165,13 +1676,6 @@
   </div>
 
   <div class="ob-card" id="ob-step-4" style="display:none;">
-    <div class="ob-scene-2">
-      <span class="ob-flutter ob-flutter-1">🎁</span>
-      <span class="ob-flutter ob-flutter-2">🏆</span>
-      <span class="ob-flutter ob-flutter-3">🎀</span>
-      <span class="ob-firefly ob-firefly-a"></span>
-      <span class="ob-firefly ob-firefly-b"></span>
-    </div>
     <h2>Palkintoportaat</h2>
     <div class="ob-hint">Millä tähtimäärillä saavutetaan palkinto, ja mikä se on? Järjestämme portaat pienimmästä suurimpaan. 🎁</div>
     <div id="ob-kpis-list"></div>
@@ -1183,10 +1687,17 @@
   </div>
 
   <div class="ob-card ob-card-finale" id="ob-step-5" style="display:none;">
-    <div class="ob-finale-scene">
-      <div class="ob-finale-moon"></div>
-      <div class="ob-finale-elf ob-finale-elf-1">
-        <svg viewBox="0 0 50 60" width="42" height="50">
+    <!-- Soft light scene with Kuutontut and Tähtipuu -->
+    <div class="finale-scene-light">
+      <div class="finale-light-moon"></div>
+      <span class="finale-tw tw1">✦</span>
+      <span class="finale-tw tw2">·</span>
+      <span class="finale-tw tw3">✦</span>
+      <span class="finale-tw tw4">·</span>
+
+      <!-- Left elf -->
+      <div class="finale-light-elf-l">
+        <svg viewBox="0 0 50 60" width="40" height="48">
           <ellipse cx="25" cy="44" rx="13" ry="12" fill="#FFE0B2"/>
           <circle cx="21" cy="42" r="1.4" fill="#3D2914"/>
           <circle cx="29" cy="42" r="1.4" fill="#3D2914"/>
@@ -1195,7 +1706,8 @@
           <circle cx="40" cy="8" r="3" fill="#FFCA28"/>
         </svg>
       </div>
-      <div class="ob-finale-elf ob-finale-elf-2">
+      <!-- Right elf -->
+      <div class="finale-light-elf-r">
         <svg viewBox="0 0 50 60" width="36" height="44">
           <ellipse cx="25" cy="44" rx="12" ry="11" fill="#F8BBD0"/>
           <circle cx="21" cy="42" r="1.3" fill="#3D2914"/>
@@ -1205,36 +1717,35 @@
           <circle cx="38" cy="12" r="2.5" fill="#FFCA28"/>
         </svg>
       </div>
-      <div class="ob-finale-tree">
-        <svg viewBox="0 0 120 140" width="100" height="120">
-          <rect x="54" y="95" width="12" height="40" fill="#5D4037" rx="3"/>
-          <path d="M60 95 Q55 80 50 75" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <path d="M60 95 Q65 78 72 72" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <ellipse cx="60" cy="55" rx="48" ry="50" fill="#2E7D32"/>
-          <ellipse cx="40" cy="40" rx="18" ry="22" fill="#388E3C"/>
-          <ellipse cx="80" cy="42" rx="18" ry="22" fill="#388E3C"/>
-          <ellipse cx="60" cy="30" rx="16" ry="20" fill="#43A047"/>
-          <g id="finale-tree-stars">
-            <polygon points="60,40 63,48 71,48 64.5,53 66.5,61 60,56 53.5,61 55.5,53 49,48 57,48" fill="#FFCA28" class="finale-star"/>
-            <polygon points="40,55 42,60 47,60 43.5,63.5 45,68 40,65.5 35,68 36.5,63.5 33,60 38,60" fill="#FFCA28" class="finale-star" style="animation-delay:0.2s"/>
-            <polygon points="80,55 82,60 87,60 83.5,63.5 85,68 80,65.5 75,68 76.5,63.5 73,60 78,60" fill="#FFCA28" class="finale-star" style="animation-delay:0.4s"/>
-            <polygon points="50,75 51.5,79 55,79 52.5,81.5 53.5,85 50,83 46.5,85 47.5,81.5 45,79 48.5,79" fill="#FFD54F" class="finale-star" style="animation-delay:0.6s"/>
-            <polygon points="70,78 71.5,82 75,82 72.5,84.5 73.5,88 70,86 66.5,88 67.5,84.5 65,82 68.5,82" fill="#FFD54F" class="finale-star" style="animation-delay:0.8s"/>
-            <polygon points="60,70 61.5,74 65,74 62.5,76.5 63.5,80 60,78 56.5,80 57.5,76.5 55,74 58.5,74" fill="#FFEB3B" class="finale-star" style="animation-delay:1s"/>
-          </g>
-        </svg>
-      </div>
-      <span class="ob-finale-sparkle ob-sp-1">✨</span>
-      <span class="ob-finale-sparkle ob-sp-2">⭐</span>
-      <span class="ob-finale-sparkle ob-sp-3">💫</span>
-      <span class="ob-finale-sparkle ob-sp-4">✨</span>
+
+      <!-- Tähtipuu -->
+      <svg class="finale-light-tree" viewBox="0 0 120 140">
+        <rect x="54" y="95" width="12" height="40" fill="#5D4037" rx="3"/>
+        <path d="M60 95 Q55 80 50 75" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M60 95 Q65 78 72 72" stroke="#5D4037" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="60" cy="55" rx="48" ry="50" fill="#2E7D32"/>
+        <ellipse cx="40" cy="40" rx="18" ry="22" fill="#388E3C"/>
+        <ellipse cx="80" cy="42" rx="18" ry="22" fill="#388E3C"/>
+        <ellipse cx="60" cy="30" rx="16" ry="20" fill="#43A047"/>
+        <polygon points="60,40 63,48 71,48 64.5,53 66.5,61 60,56 53.5,61 55.5,53 49,48 57,48" fill="#FFCA28" class="finale-star"/>
+        <polygon points="40,55 42,60 47,60 43.5,63.5 45,68 40,65.5 35,68 36.5,63.5 33,60 38,60" fill="#FFCA28" class="finale-star" style="animation-delay:0.2s"/>
+        <polygon points="80,55 82,60 87,60 83.5,63.5 85,68 80,65.5 75,68 76.5,63.5 73,60 78,60" fill="#FFCA28" class="finale-star" style="animation-delay:0.4s"/>
+        <polygon points="50,75 51.5,79 55,79 52.5,81.5 53.5,85 50,83 46.5,85 47.5,81.5 45,79 48.5,79" fill="#FFD54F" class="finale-star" style="animation-delay:0.6s"/>
+        <polygon points="70,78 71.5,82 75,82 72.5,84.5 73.5,88 70,86 66.5,88 67.5,84.5 65,82 68.5,82" fill="#FFD54F" class="finale-star" style="animation-delay:0.8s"/>
+        <polygon points="60,70 61.5,74 65,74 62.5,76.5 63.5,80 60,78 56.5,80 57.5,76.5 55,74 58.5,74" fill="#FFEB3B" class="finale-star" style="animation-delay:1s"/>
+      </svg>
     </div>
-    <h2>Taikametsä on valmis!</h2>
-    <div class="ob-intro-text ob-finale-text">
-      <p><span class="hl">Kuutontut</span> ovat jo asemissa, ja <span class="hl">Tähtipuut</span> ovat valmiit kantamaan ensimmäisiä tähtiänne.</p>
-      <p id="ob-summary-line"></p>
-      <p class="ob-whisper">Astukaa sisään — jokainen kiltti teko tuo uuden tähden yölle. 🌙</p>
-    </div>
+
+    <h2 class="finale-heading">Taikametsä on valmis!</h2>
+
+    <p class="finale-lead">
+      <span class="hl">Kuutontut</span> ovat jo asemissa, ja <span class="hl">Tähtipuut</span> ovat valmiit kantamaan ensimmäisiä tähtiänne.
+    </p>
+
+    <div class="finale-summary-card" id="ob-summary-line"></div>
+
+    <p class="finale-closing">Astukaa sisään — jokainen kiltti teko tuo uuden tähden taivaalle 🌙</p>
+
     <div class="ob-nav">
       <button class="ob-back" onclick="obGoTo(4)">← Takaisin</button>
       <button class="ob-next" onclick="obFinish()">ASTU TAIKAMETSÄÄN 🌟</button>
@@ -1245,10 +1756,49 @@
 <div class="container" id="main-app" style="display:none;">
   <header class="banner">
     <button class="settings-btn" onclick="openSettings()" title="Asetukset">⚙️</button>
+
+    <!-- Rolling silver hills silhouette at bottom -->
+    <svg class="banner-hills" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 60 L0 42 Q60 30 120 38 Q180 46 240 32 Q300 22 360 36 Q380 40 400 34 L400 60 Z" fill="#C8A96A" opacity="0.35"/>
+      <path d="M0 60 L0 50 Q80 40 160 46 Q240 52 320 44 Q360 40 400 46 L400 60 Z" fill="#8B6F47" opacity="0.28"/>
+    </svg>
+
     <div class="banner-moon"></div>
     <div class="banner-cloud cloud-1"></div>
     <div class="banner-cloud cloud-2"></div>
-    <div class="banner-big-star">⭐</div>
+
+    <!-- Little Kuutonttu flying across -->
+    <div class="banner-flying-elf" aria-hidden="true">
+      <svg viewBox="0 0 50 60" width="28" height="34">
+        <ellipse cx="25" cy="44" rx="13" ry="12" fill="#FFE0B2"/>
+        <circle cx="21" cy="42" r="1.3" fill="#3D2914"/>
+        <circle cx="29" cy="42" r="1.3" fill="#3D2914"/>
+        <path d="M10 32 L25 6 L40 32 Z" fill="#F57C00"/>
+        <circle cx="40" cy="8" r="2.5" fill="#FFCA28"/>
+      </svg>
+    </div>
+
+    <!-- Trees at both sides -->
+    <svg class="banner-tree-left" viewBox="0 0 60 90" width="44" height="66" aria-hidden="true">
+      <rect x="26" y="55" width="8" height="30" fill="#5D4037" rx="2"/>
+      <ellipse cx="30" cy="40" rx="22" ry="24" fill="#2E7D32"/>
+      <ellipse cx="22" cy="34" rx="9" ry="11" fill="#388E3C"/>
+      <ellipse cx="38" cy="32" rx="9" ry="11" fill="#388E3C"/>
+      <polygon points="30,28 33,35 40,35 34.5,39 36.5,46 30,42 23.5,46 25.5,39 20,35 27,35" fill="#FFCA28" opacity="0.9"/>
+    </svg>
+    <svg class="banner-tree-right" viewBox="0 0 60 90" width="36" height="54" aria-hidden="true">
+      <rect x="27" y="60" width="6" height="25" fill="#5D4037" rx="2"/>
+      <ellipse cx="30" cy="44" rx="18" ry="20" fill="#388E3C"/>
+      <polygon points="30,34 32,40 37,40 33,43 34.5,48 30,45 25.5,48 27,43 23,40 28,40" fill="#FFCA28" opacity="0.9"/>
+    </svg>
+
+    <!-- Ambient twinkles scattered -->
+    <span class="banner-twinkle bt-1">✦</span>
+    <span class="banner-twinkle bt-2">·</span>
+    <span class="banner-twinkle bt-3">✦</span>
+    <span class="banner-twinkle bt-4">·</span>
+
+    <button class="banner-big-star" onclick="bannerStarTapped(event)" title="Napauta!" aria-label="Napauta tähteä">⭐</button>
     <h1 class="banner-title">Tähtipolku</h1>
     <div class="banner-sub">~ hyvien tekojen taikametsä ~</div>
   </header>
@@ -1262,31 +1812,10 @@
     </div>
   </section>
 
-  <h3 class="section-title">Palkintoportaat</h3>
-  <div class="kpi-row">
-    <div class="kpi-box tier-1">
-      <span class="kpi-icon">🍭</span>
-      <div class="kpi-stars">10 ⭐</div>
-      <div class="kpi-label">Viikon sankari</div>
-      <div class="kpi-prize">Tikkari!</div>
-    </div>
-    <div class="kpi-box tier-2">
-      <span class="kpi-icon">🍦</span>
-      <div class="kpi-stars">25 ⭐</div>
-      <div class="kpi-label">Kultainen tähti</div>
-      <div class="kpi-prize">Jäätelö!</div>
-    </div>
-    <div class="kpi-box tier-3">
-      <span class="kpi-icon">🎢</span>
-      <div class="kpi-stars">50 ⭐</div>
-      <div class="kpi-label">Taikamestari</div>
-      <div class="kpi-prize">HopLop tai elokuvat!</div>
-    </div>
-  </div>
+  <h3 class="section-title section-title-sm">Palkintoportaat</h3>
+  <div class="kpi-row" id="kpi-static-row"></div>
 
-  <div class="whisper">~ jokainen teko tuo uuden tähden puuhusi ~</div>
-
-  <h3 class="section-title">Teot ja tähdet</h3>
+  <h3 class="section-title section-title-sm">Teot ja tähdet</h3>
   <div class="deeds-grid" id="deeds-grid"></div>
 
   <div class="whisper">~ urheat seikkailijat vartioivat tähtipuitaan ~</div>
@@ -1318,6 +1847,14 @@
     <h3>Valitse kuvake</h3>
     <div class="emoji-grid" id="emoji-grid"></div>
     <button class="modal-close" onclick="closeEmojiModal()">Sulje</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="kpi-modal" onclick="if(event.target===this)closeKpiModal()">
+  <div class="modal kpi-modal-inner">
+    <h3 id="kpi-modal-title">🏆 Palkintoportaat</h3>
+    <div id="kpi-modal-list"></div>
+    <button class="modal-close" onclick="closeKpiModal()">Sulje</button>
   </div>
 </div>
 
@@ -1432,11 +1969,28 @@ function saveState() {
 function getRole(roleId) { return ROLES.find(r => r.id === roleId) || ROLES[0]; }
 
 let audioCtx = null;
+let audioUnlocked = false;
 function getCtx() {
   if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return null; } }
-  if (audioCtx.state === 'suspended') audioCtx.resume();
+  if (audioCtx.state === 'suspended') { try { audioCtx.resume(); } catch(e) {} }
   return audioCtx;
 }
+function unlockAudio() {
+  if (audioUnlocked) return;
+  const ctx = getCtx(); if (!ctx) return;
+  try {
+    const buffer = ctx.createBuffer(1, 1, 22050);
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    src.connect(ctx.destination);
+    src.start(0);
+    audioUnlocked = true;
+  } catch(e) {}
+}
+// Unlock on first user interaction anywhere
+['touchstart','click','keydown'].forEach(ev => {
+  window.addEventListener(ev, unlockAudio, { once: false, passive: true });
+});
 function playTone(freq, duration, type, volume, delay) {
   if (!state.soundOn) return;
   const ctx = getCtx(); if (!ctx) return;
@@ -1721,18 +2275,36 @@ function obRemoveKpi(idx) {
 }
 
 function renderObSummary() {
-  const kidCount = obDraftKids.filter(k => (k.name || '').trim()).length;
+  const validKids = obDraftKids.filter(k => (k.name || '').trim());
   const deedCount = obDraftDeeds.filter(d => (d.nm || '').trim()).length;
   const kpiCount = obDraftKpis.length;
-  const kidList = obDraftKids.filter(k => (k.name || '').trim()).map(k => {
-    const r = getRole(k.roleId);
-    return r.ico + ' <b style="color:' + r.color + '">' + escapeHtml(k.name) + '</b>';
-  }).join(' · ');
+
   const el = document.getElementById('ob-summary-line');
-  if (el) {
-    el.innerHTML = 'Matkaan lähtevät: ' + (kidList || '(nimettömät)') +
-      ' — mukana <span class="hl">' + deedCount + ' hyvää tekoa</span> ja <span class="hl">' + kpiCount + ' palkintoporrasta</span>.';
+  if (!el) return;
+
+  if (validKids.length === 0) {
+    el.innerHTML =
+      '<span class="fs-label">Matkaan lähtevät</span>' +
+      '<div class="fs-kids">(nimettömät seikkailijat)</div>' +
+      '<div class="fs-meta">' +
+        '<div class="fs-meta-item"><span class="fs-meta-num">' + deedCount + '</span>hyvää tekoa</div>' +
+        '<div class="fs-meta-item"><span class="fs-meta-num">' + kpiCount + '</span>palkintoa</div>' +
+      '</div>';
+    return;
   }
+
+  const kidList = validKids.map(k => {
+    const r = getRole(k.roleId);
+    return '<span class="fs-kid" style="color:' + r.color + '">' + r.ico + ' ' + escapeHtml(k.name) + '</span>';
+  }).join(' · ');
+
+  el.innerHTML =
+    '<span class="fs-label">Matkaan lähtevät</span>' +
+    '<div class="fs-kids">' + kidList + '</div>' +
+    '<div class="fs-meta">' +
+      '<div class="fs-meta-item"><span class="fs-meta-num">' + deedCount + '</span>hyvää tekoa</div>' +
+      '<div class="fs-meta-item"><span class="fs-meta-num">' + kpiCount + '</span>palkintoa</div>' +
+    '</div>';
 }
 
 function obFinish() {
@@ -1790,14 +2362,33 @@ function openSettings() { obInit(true); }
 function showMainApp() {
   document.getElementById('onboarding').style.display = 'none';
   document.getElementById('main-app').style.display = 'block';
+  renderKpiStatic();
   renderDeeds();
   renderKids();
   updateSoundBtn();
   window.scrollTo(0, 0);
 }
 
+function renderKpiStatic() {
+  const el = document.getElementById('kpi-static-row');
+  if (!el) return;
+  const kpis = kpisFrom(state).slice().sort((a,b) => a.at - b.at);
+  const tierClasses = ['tier-1', 'tier-2', 'tier-3'];
+  el.innerHTML = kpis.map((k, i) => {
+    const tier = tierClasses[i % 3];
+    return '<div class="kpi-box ' + tier + '">' +
+      '<span class="kpi-icon">' + k.ico + '</span>' +
+      '<div class="kpi-stars">' + k.at + ' ⭐</div>' +
+      '<div class="kpi-label">' + escapeHtml(k.label || '') + '</div>' +
+      (k.prize ? '<div class="kpi-prize">' + escapeHtml(k.prize) + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
 function renderDeeds() {
-  document.getElementById('deeds-grid').innerHTML = state.setup.deeds.map(d =>
+  const el = document.getElementById('deeds-grid');
+  if (!el) return;
+  el.innerHTML = state.setup.deeds.map(d =>
     '<div class="deed">' +
       '<span class="deed-ico">' + d.ico + '</span>' +
       '<div class="deed-nm">' + escapeHtml(d.nm) + '</div>' +
@@ -1919,6 +2510,134 @@ function animateFreshStars(kidId, fromIdx, toIdx) {
   }
 }
 
+function obCloudTapped(evt) {
+  const btn = evt && evt.currentTarget ? evt.currentTarget : document.querySelector('.ob-cloud');
+  if (!btn) return;
+  btn.classList.remove('tapped');
+  void btn.offsetWidth;
+  btn.classList.add('tapped');
+  setTimeout(() => btn.classList.remove('tapped'), 650);
+
+  // Find the tree star (drop target)
+  const scene = btn.closest('.ob-scene-1');
+  const tree = scene ? scene.querySelector('.ob-below-tree') : null;
+  const treeStar = scene ? scene.querySelector('#tree-star-drop') : null;
+  if (!scene || !tree) return;
+
+  // Play gentle chime (star descending)
+  if (state.soundOn) {
+    playTone(1318.5, 0.16, 'sine', 0.14, 0);
+    playTone(1046.5, 0.18, 'sine', 0.13, 0.15);
+    playTone(783.99, 0.25, 'sine', 0.11, 0.40);
+    playTone(659.25, 0.35, 'sine', 0.10, 0.70);
+  }
+
+  // Spawn a falling star from the cloud to the tree
+  const cloudRect = btn.getBoundingClientRect();
+  const treeRect = tree.getBoundingClientRect();
+  const sceneRect = scene.getBoundingClientRect();
+
+  const xStart = (cloudRect.left + cloudRect.width / 2) - sceneRect.left;
+  const yStart = (cloudRect.top + cloudRect.height * 0.55) - sceneRect.top;
+  const xEnd = (treeRect.left + treeRect.width / 2) - sceneRect.left;
+  const yEnd = (treeRect.top + treeRect.height * 0.4) - sceneRect.top;
+
+  const star = document.createElement('div');
+  star.className = 'falling-star';
+  star.textContent = '⭐';
+  star.style.left = '0';
+  star.style.top = '0';
+  star.style.setProperty('--x-start', xStart + 'px');
+  star.style.setProperty('--y-start', yStart + 'px');
+  star.style.setProperty('--x-end', xEnd + 'px');
+  star.style.setProperty('--y-end', yEnd + 'px');
+  scene.appendChild(star);
+
+  // Light up the star in the tree when it arrives
+  setTimeout(() => {
+    if (treeStar) treeStar.classList.add('lit');
+  }, 1200);
+  setTimeout(() => star.remove(), 1500);
+}
+
+function bannerStarTapped(evt) {
+  const el = evt && evt.currentTarget ? evt.currentTarget : document.querySelector('.banner-big-star');
+  if (!el) return;
+  el.classList.remove('burst');
+  void el.offsetWidth;
+  el.classList.add('burst');
+  setTimeout(() => el.classList.remove('burst'), 700);
+
+  if (state.soundOn) {
+    playTone(880, 0.12, 'sine', 0.16, 0);
+    playTone(1318.5, 0.15, 'sine', 0.14, 0.05);
+    playTone(1760, 0.2, 'sine', 0.1, 0.10);
+    playTone(2093, 0.22, 'sine', 0.08, 0.14);
+  }
+
+  // Rain a few sparkles from the star position
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const emojis = ['✨','⭐','💫','🌟'];
+  for (let i = 0; i < 8; i++) {
+    const s = document.createElement('div');
+    s.className = 'banner-star-particle';
+    s.textContent = emojis[i % emojis.length];
+    const angle = (Math.PI * 2 * i) / 8 + (Math.random() - 0.5) * 0.6;
+    const dist = 60 + Math.random() * 60;
+    s.style.left = cx + 'px';
+    s.style.top = (cy + window.scrollY) + 'px';
+    s.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+    s.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 1200);
+  }
+}
+
+function treeTapped(kidId) {
+  const wrap = document.querySelector('#kid-' + kidId + ' .kid-tree-wrap');
+  if (!wrap) return;
+  const s = state.progress[kidId];
+  // Spin all visible stars
+  wrap.classList.remove('tree-burst');
+  void wrap.offsetWidth;
+  wrap.classList.add('tree-burst');
+  setTimeout(() => wrap.classList.remove('tree-burst'), 1000);
+
+  // Play twinkle sound
+  if (state.soundOn) {
+    playTone(1046.5, 0.15, 'sine', 0.14, 0);
+    playTone(1318.5, 0.15, 'sine', 0.12, 0.05);
+    playTone(1567.98, 0.2, 'sine', 0.1, 0.10);
+    playTone(2093.0, 0.25, 'sine', 0.08, 0.15);
+  }
+
+  // Show encouraging tooltip message
+  const pts = s ? s.pts : 0;
+  const messages = [
+    'Mitä kaunis puu! 🌳',
+    'Tähdet tuikkivat iloisesti! ✨',
+    'Kuutontut ovat ylpeitä sinusta! 💫',
+    'Sinulla on jo ' + pts + ' tähteä! ⭐',
+    pts === 0 ? 'Ensimmäinen tähti odottaa... 🌟' : 'Hieno puu, ' + pts + ' tähteä! 🌟',
+    'Loista kuin yötaivas! 🌙',
+  ];
+  const msg = messages[Math.floor(Math.random() * messages.length)];
+  showFloatingMessage(wrap, msg);
+}
+
+function showFloatingMessage(anchorEl, text) {
+  const bubble = document.createElement('div');
+  bubble.className = 'tree-bubble';
+  bubble.textContent = text;
+  const rect = anchorEl.getBoundingClientRect();
+  bubble.style.left = (rect.left + window.scrollX + rect.width / 2) + 'px';
+  bubble.style.top = (rect.top + window.scrollY + 20) + 'px';
+  document.body.appendChild(bubble);
+  setTimeout(() => bubble.remove(), 2400);
+}
+
 
 function renderKids() {
   const deeds = state.setup.deeds;
@@ -1926,14 +2645,17 @@ function renderKids() {
   document.getElementById('kids').innerHTML = state.setup.kids.map(k => {
     const role = getRole(k.roleId);
     const s = state.progress[k.id] || { pts: 0, history: [] };
+
     const kpiRows = activeKpis.map(kpi => {
       const done = s.pts >= kpi.at;
       const pct = Math.min(100, Math.round(s.pts / kpi.at * 100));
       const left = Math.max(0, kpi.at - s.pts);
+      const leftLabel = done ? '✓ Saavutettu!' : left + ' puuttuu';
+      const prizeLabel = '<span class="kpi-emoji">' + kpi.ico + '</span>' + escapeHtml(kpi.label || '') + (kpi.prize ? ' · ' + escapeHtml(kpi.prize) : '');
       return '<div class="kpi-item">' +
           '<div class="kpi-head">' +
-            '<span class="kpi-name"><span class="kpi-emoji">' + kpi.ico + '</span>' + escapeHtml(kpi.label || '') + (kpi.prize ? ' <span class="kpi-prize-inline">· ' + escapeHtml(kpi.prize) + '</span>' : '') + '</span>' +
-            '<span class="kpi-status-badge ' + (done ? 'done' : '') + '">' + (done ? '✓ Saavutettu!' : left + ' puuttuu') + '</span>' +
+            '<span class="kpi-status-badge ' + (done ? 'done' : '') + '">' + leftLabel + '</span>' +
+            '<span class="kpi-name">' + prizeLabel + '</span>' +
           '</div>' +
           '<div class="track"><div class="fill ' + (done ? 'done' : '') + '" style="width:' + pct + '%; background:' + role.color + ';"></div></div>' +
         '</div>';
@@ -1948,6 +2670,25 @@ function renderKids() {
       ? 'Viimeisin: <span class="last-act">' + last.ico + ' ' + escapeHtml(last.nm) + ' (+' + last.pt + ')</span>'
       : 'Ei peruutettavia tekoja';
 
+    // Count how many times each deed has been completed
+    const tallies = {};
+    (s.history || []).forEach(h => {
+      const key = (h.ico || '') + '|' + (h.nm || '');
+      tallies[key] = (tallies[key] || 0) + 1;
+    });
+    const deedTallies = deeds.length > 0
+      ? '<div class="deed-tallies">' +
+        deeds.map(d => {
+          const key = (d.ico || '') + '|' + (d.nm || '');
+          const n = tallies[key] || 0;
+          return '<div class="deed-tally" title="' + escapeHtml(d.nm) + '">' +
+            '<span class="deed-tally-ico">' + d.ico + '</span>' +
+            '<span class="deed-tally-count">×' + n + '</span>' +
+          '</div>';
+        }).join('') +
+      '</div>'
+      : '';
+
     return '<div class="kid" style="border-color:' + role.accent + ';color:' + role.color + '" id="kid-' + k.id + '">' +
       '<div class="kid-top">' +
         '<div class="ava" id="ava-' + k.id + '" style="background:' + role.bg + '">' + role.ico + '</div>' +
@@ -1960,14 +2701,15 @@ function renderKids() {
           '<div class="pts-lbl">tähteä</div>' +
         '</div>' +
       '</div>' +
-      '<div class="kid-tree-wrap">' +
+      '<div class="kid-tree-wrap" onclick="treeTapped(\'' + k.id + '\')">' +
         '<div class="kid-tree-label">🌳 ' + escapeHtml(k.name) + 'in Tähtipuu</div>' +
         buildStarTree(k.id, role.color) +
         '<div class="kid-tree-count">' + s.pts + ' / ' + TREE_MAX_STARS + ' tähteä puussa</div>' +
+        deedTallies +
       '</div>' +
       '<div class="kpi-items">' + kpiRows + '</div>' +
       '<div class="btns-section">' +
-        '<div class="btns-label">✨ Mitä hyvää tänään?</div>' +
+        '<div class="btns-label">✨ Hyvät teot</div>' +
         '<div class="btns-row">' + addBtns + '</div>' +
         '<div class="undo-bar">' +
           '<div class="undo-info">' + undoInfo + '</div>' +
@@ -1979,6 +2721,36 @@ function renderKids() {
 
   // After DOM is built, populate tree stars for each kid
   state.setup.kids.forEach(k => syncTreeStars(k.id));
+}
+
+function openKpiModal(kidId) {
+  const s = state.progress[kidId] || { pts: 0 };
+  const k = state.setup.kids.find(x => x.id === kidId);
+  if (!k) return;
+  const role = getRole(k.roleId);
+  const activeKpis = kpisFrom(state).slice().sort((a, b) => a.at - b.at);
+  const list = activeKpis.map(kpi => {
+    const done = s.pts >= kpi.at;
+    const pct = Math.min(100, Math.round(s.pts / kpi.at * 100));
+    const left = Math.max(0, kpi.at - s.pts);
+    return '<div class="kpi-modal-item' + (done ? ' done' : '') + '">' +
+      '<div class="kpi-modal-icon">' + kpi.ico + '</div>' +
+      '<div class="kpi-modal-body">' +
+        '<div class="kpi-modal-title">' + escapeHtml(kpi.label || '') + '</div>' +
+        (kpi.prize ? '<div class="kpi-modal-prize">🎁 ' + escapeHtml(kpi.prize) + '</div>' : '') +
+        '<div class="kpi-modal-track"><div class="kpi-modal-fill" style="width:' + pct + '%; background:' + role.color + ';"></div></div>' +
+        '<div class="kpi-modal-status">' + (done ? '✓ Saavutettu!' : s.pts + ' / ' + kpi.at + ' — ' + left + ' puuttuu') + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('kpi-modal-title').textContent = '🏆 ' + k.name + 'in palkintoportaat';
+  document.getElementById('kpi-modal-list').innerHTML = list;
+  document.getElementById('kpi-modal').classList.add('show');
+}
+
+function closeKpiModal() {
+  document.getElementById('kpi-modal').classList.remove('show');
 }
 
 function addDeed(kidId, deedIdx, evt) {
