@@ -215,8 +215,9 @@
   .kpi-items { margin-bottom: 14px; }
   .kpi-item { margin-bottom: 12px; }
   .kpi-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 12px; font-weight: 800; }
-  .kpi-name { display: flex; align-items: center; gap: 6px; }
+  .kpi-name { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
   .kpi-name .kpi-emoji { font-size: 16px; }
+  .kpi-prize-inline { font-family: 'Caveat', cursive; font-weight: 700; font-size: 15px; opacity: 0.85; }
   .kpi-status-badge { font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 10px; background: #FFF3CC; color: #8D6E63; }
   .kpi-status-badge.done { background: linear-gradient(135deg, #66BB6A, #4CAF50); color: white; box-shadow: 0 2px 6px rgba(76,175,80,0.3); }
   .track { background: #F0E4D0; border-radius: 20px; height: 16px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
@@ -376,13 +377,13 @@
   }
   .ob-sub { font-family: 'Caveat', cursive; font-size: 22px; color: #5D2F00; margin-top: 2px; font-weight: 700; }
 
-  .ob-stepper { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 24px; }
+  .ob-stepper { display: flex; justify-content: center; align-items: center; gap: 6px; margin-bottom: 24px; flex-wrap: nowrap; }
   .step-dot {
     width: 28px; height: 28px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Fredoka One', cursive; font-size: 14px;
+    font-family: 'Fredoka One', cursive; font-size: 13px;
     background: white; border: 2.5px solid #FFCC80; color: #F57C00;
-    transition: all 0.3s;
+    transition: all 0.3s; flex-shrink: 0;
   }
   .step-dot.active {
     background: linear-gradient(135deg, #FFCA28, #FF9800);
@@ -391,7 +392,7 @@
     transform: scale(1.15);
   }
   .step-dot.done { background: #66BB6A; border-color: #2E7D32; color: white; }
-  .step-bar { width: 28px; height: 3px; background: #FFCC80; border-radius: 2px; }
+  .step-bar { flex: 0 1 22px; min-width: 10px; height: 3px; background: #FFCC80; border-radius: 2px; }
   .step-bar.done { background: #66BB6A; }
 
   .ob-card {
@@ -623,6 +624,45 @@
     color: white; border-color: #F57C00;
     box-shadow: 0 2px 4px rgba(255,152,0,0.3);
   }
+
+  /* KPI (palkintoporras) rows in onboarding */
+  .ob-kpi-row {
+    background: linear-gradient(180deg, #FFF8E1 0%, #FFECB3 100%);
+    border: 2px solid #FFCC80; border-radius: 16px;
+    padding: 12px; margin-bottom: 10px;
+    display: grid; grid-template-columns: 48px 1fr auto; gap: 10px;
+    align-items: center;
+  }
+  .ob-kpi-row .ob-deed-ico-btn { width: 48px; height: 48px; font-size: 26px; }
+  .ob-kpi-fields { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .ob-kpi-label-input, .ob-kpi-prize-input {
+    border: 2px solid #FFCC80; background: white; color: #5D2F00;
+    border-radius: 10px; padding: 7px 10px; font-size: 13px; font-weight: 700;
+    font-family: 'Nunito', sans-serif; width: 100%; box-sizing: border-box;
+  }
+  .ob-kpi-label-input { font-size: 14px; font-weight: 800; }
+  .ob-kpi-prize-input { font-family: 'Caveat', cursive; font-size: 17px; color: #8D6E63; }
+  .ob-kpi-label-input:focus, .ob-kpi-prize-input:focus { outline: none; border-color: #F57C00; }
+  .ob-kpi-side { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }
+  .ob-kpi-at {
+    display: flex; align-items: center; gap: 4px;
+    background: white; border: 2px solid #FFCA28; border-radius: 12px;
+    padding: 4px 6px;
+  }
+  .ob-kpi-at-input {
+    width: 46px; border: none; background: transparent;
+    font-family: 'Fredoka One', cursive; font-size: 18px; color: #F57C00;
+    text-align: center; -moz-appearance: textfield;
+  }
+  .ob-kpi-at-input::-webkit-outer-spin-button,
+  .ob-kpi-at-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .ob-kpi-at-input:focus { outline: none; }
+  .ob-kpi-at-star { font-size: 16px; }
+  .ob-kpi-at-label {
+    font-family: 'Caveat', cursive; font-size: 13px;
+    color: #8D6E63; font-weight: 700; margin-top: -2px;
+  }
+  .ob-kpi-row .ob-remove-btn { align-self: start; }
 
   .ob-nav { display: flex; gap: 10px; margin-top: 20px; }
   .ob-back {
@@ -1124,7 +1164,25 @@
     </div>
   </div>
 
-  <div class="ob-card ob-card-finale" id="ob-step-4" style="display:none;">
+  <div class="ob-card" id="ob-step-4" style="display:none;">
+    <div class="ob-scene-2">
+      <span class="ob-flutter ob-flutter-1">🎁</span>
+      <span class="ob-flutter ob-flutter-2">🏆</span>
+      <span class="ob-flutter ob-flutter-3">🎀</span>
+      <span class="ob-firefly ob-firefly-a"></span>
+      <span class="ob-firefly ob-firefly-b"></span>
+    </div>
+    <h2>Palkintoportaat</h2>
+    <div class="ob-hint">Millä tähtimäärillä saavutetaan palkinto, ja mikä se on? Järjestämme portaat pienimmästä suurimpaan. 🎁</div>
+    <div id="ob-kpis-list"></div>
+    <button class="ob-add-btn" onclick="obAddKpi()">+ LISÄÄ PALKINTO</button>
+    <div class="ob-nav">
+      <button class="ob-back" onclick="obGoTo(3)">← Takaisin</button>
+      <button class="ob-next" onclick="obGoTo(5)">JATKA →</button>
+    </div>
+  </div>
+
+  <div class="ob-card ob-card-finale" id="ob-step-5" style="display:none;">
     <div class="ob-finale-scene">
       <div class="ob-finale-moon"></div>
       <div class="ob-finale-elf ob-finale-elf-1">
@@ -1178,7 +1236,7 @@
       <p class="ob-whisper">Astukaa sisään — jokainen kiltti teko tuo uuden tähden yölle. 🌙</p>
     </div>
     <div class="ob-nav">
-      <button class="ob-back" onclick="obGoTo(3)">← Takaisin</button>
+      <button class="ob-back" onclick="obGoTo(4)">← Takaisin</button>
       <button class="ob-next" onclick="obFinish()">ASTU TAIKAMETSÄÄN 🌟</button>
     </div>
   </div>
@@ -1322,7 +1380,7 @@ const DEED_EMOJIS = [
   '🧼','🪥','🪑','🚲','🌷','🥛','🍌','🍪','🪀','🎲','🖍️','✏️',
 ];
 
-const KPI = [
+const DEFAULT_KPIS = [
   { at:10, ico:'🍭', label:'Viikon sankari', prize:'Tikkari!',
     story:'Kuutonttu toi sinulle makean yllätyksen pilvien päältä!' },
   { at:25, ico:'🍦', label:'Kultainen tähti', prize:'Jäätelö!',
@@ -1333,10 +1391,16 @@ const KPI = [
 
 const STORAGE_KEY = 'tahtipolku_v5';
 let state = {
-  setup: { complete: false, kids: [], deeds: [] },
+  setup: { complete: false, kids: [], deeds: [], kpis: [] },
   progress: {},
   soundOn: true,
 };
+
+function kpisFrom(s) {
+  return (s && s.setup && Array.isArray(s.setup.kpis) && s.setup.kpis.length > 0)
+    ? s.setup.kpis
+    : DEFAULT_KPIS;
+}
 
 function loadState() {
   try {
@@ -1347,12 +1411,20 @@ function loadState() {
         state.setup = parsed.setup;
         state.progress = parsed.progress || {};
         state.soundOn = parsed.soundOn !== false;
+        // Migration: ensure kpis array exists
+        if (!Array.isArray(state.setup.kpis) || state.setup.kpis.length === 0) {
+          state.setup.kpis = JSON.parse(JSON.stringify(DEFAULT_KPIS));
+        }
         state.setup.kids.forEach(k => {
           if (!state.progress[k.id]) state.progress[k.id] = { pts: 0, history: [] };
         });
       }
     }
   } catch(e) { console.warn('load failed', e); }
+  // Ensure kpis is always populated, even on fresh state
+  if (!Array.isArray(state.setup.kpis) || state.setup.kpis.length === 0) {
+    state.setup.kpis = JSON.parse(JSON.stringify(DEFAULT_KPIS));
+  }
 }
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
@@ -1440,9 +1512,11 @@ function buildMagicBg() {
 
 let obDraftKids = [];
 let obDraftDeeds = [];
+let obDraftKpis = [];
 let obCurrentStep = 1;
 let rolePickerKidIdx = -1;
 let emojiPickerDeedIdx = -1;
+let emojiPickerTarget = { type: null, idx: -1 };
 
 function obInit(fromSettings) {
   obDraftKids = state.setup.kids.length > 0
@@ -1451,6 +1525,9 @@ function obInit(fromSettings) {
   obDraftDeeds = state.setup.deeds.length > 0
     ? JSON.parse(JSON.stringify(state.setup.deeds))
     : JSON.parse(JSON.stringify(DEFAULT_DEEDS));
+  obDraftKpis = (Array.isArray(state.setup.kpis) && state.setup.kpis.length > 0)
+    ? JSON.parse(JSON.stringify(state.setup.kpis))
+    : JSON.parse(JSON.stringify(DEFAULT_KPIS));
   document.getElementById('onboarding').style.display = 'block';
   document.getElementById('main-app').style.display = 'none';
   obGoTo(fromSettings ? 2 : 1);
@@ -1458,22 +1535,23 @@ function obInit(fromSettings) {
 
 function obGoTo(step) {
   obCurrentStep = step;
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 5; i++) {
     document.getElementById('ob-step-' + i).style.display = (i === step) ? 'block' : 'none';
   }
   renderStepper();
   if (step === 2) renderObKids();
   if (step === 3) renderObDeeds();
-  if (step === 4) renderObSummary();
+  if (step === 4) renderObKpis();
+  if (step === 5) renderObSummary();
   window.scrollTo(0, 0);
 }
 
 function renderStepper() {
-  const steps = [1, 2, 3, 4];
+  const steps = [1, 2, 3, 4, 5];
   const html = steps.map((n, i) => {
     const cls = n < obCurrentStep ? 'done' : (n === obCurrentStep ? 'active' : '');
     const dot = '<div class="step-dot ' + cls + '">' + (n < obCurrentStep ? '✓' : n) + '</div>';
-    const bar = i < 3 ? '<div class="step-bar ' + (n < obCurrentStep ? 'done' : '') + '"></div>' : '';
+    const bar = i < 4 ? '<div class="step-bar ' + (n < obCurrentStep ? 'done' : '') + '"></div>' : '';
     return dot + bar;
   }).join('');
   document.getElementById('ob-stepper').innerHTML = html;
@@ -1563,6 +1641,7 @@ function obRemoveDeed(idx) {
 }
 
 function openEmojiPicker(deedIdx) {
+  emojiPickerTarget = { type: 'deed', idx: deedIdx };
   emojiPickerDeedIdx = deedIdx;
   const current = obDraftDeeds[deedIdx].ico;
   const grid = document.getElementById('emoji-grid');
@@ -1571,21 +1650,80 @@ function openEmojiPicker(deedIdx) {
   ).join('');
   document.getElementById('emoji-modal').classList.add('show');
 }
+function openKpiEmojiPicker(kpiIdx) {
+  emojiPickerTarget = { type: 'kpi', idx: kpiIdx };
+  const current = obDraftKpis[kpiIdx].ico;
+  const kpiEmojis = ['🍭','🍦','🎢','🏆','🎁','🎀','🏅','🥇','🎖️','⭐','🌟','💫',
+                     '🍪','🍫','🍩','🍰','🧁','🍬','🍡','🍮','🥤','🍉','🍓','🍎',
+                     '🎠','🎡','🎪','🎨','🎭','🎬','🎮','🎲','🧸','🪀','🎯','🎢',
+                     '🚲','🛴','🛹','⚽','🏀','🎾','🏐','🎳','🏓','🎣','🏖️','🗺️'];
+  const grid = document.getElementById('emoji-grid');
+  grid.innerHTML = kpiEmojis.map(e =>
+    '<div class="emoji-card ' + (e === current ? 'selected' : '') + '" onclick="selectEmoji(\'' + e + '\')">' + e + '</div>'
+  ).join('');
+  document.getElementById('emoji-modal').classList.add('show');
+}
 function selectEmoji(ico) {
-  if (emojiPickerDeedIdx >= 0) {
-    obDraftDeeds[emojiPickerDeedIdx].ico = ico;
+  if (emojiPickerTarget.type === 'deed' && emojiPickerTarget.idx >= 0) {
+    obDraftDeeds[emojiPickerTarget.idx].ico = ico;
     renderObDeeds();
+  } else if (emojiPickerTarget.type === 'kpi' && emojiPickerTarget.idx >= 0) {
+    obDraftKpis[emojiPickerTarget.idx].ico = ico;
+    renderObKpis();
   }
   closeEmojiModal();
 }
 function closeEmojiModal() {
   document.getElementById('emoji-modal').classList.remove('show');
+  emojiPickerTarget = { type: null, idx: -1 };
   emojiPickerDeedIdx = -1;
+}
+
+// KPI draft editing
+function renderObKpis() {
+  const list = document.getElementById('ob-kpis-list');
+  if (!list) return;
+  list.innerHTML = obDraftKpis.map((k, i) =>
+    '<div class="ob-kpi-row">' +
+      '<button class="ob-deed-ico-btn" onclick="openKpiEmojiPicker(' + i + ')">' + k.ico + '</button>' +
+      '<div class="ob-kpi-fields">' +
+        '<input type="text" class="ob-kpi-label-input" value="' + escapeHtml(k.label || '') + '" placeholder="Portaan nimi" oninput="obUpdateKpiLabel(' + i + ', this.value)" maxlength="30">' +
+        '<input type="text" class="ob-kpi-prize-input" value="' + escapeHtml(k.prize || '') + '" placeholder="Palkinto (esim. Jäätelö!)" oninput="obUpdateKpiPrize(' + i + ', this.value)" maxlength="40">' +
+      '</div>' +
+      '<div class="ob-kpi-side">' +
+        '<div class="ob-kpi-at">' +
+          '<input type="number" class="ob-kpi-at-input" value="' + k.at + '" min="1" max="999" onchange="obUpdateKpiAt(' + i + ', this.value)" oninput="obUpdateKpiAt(' + i + ', this.value)">' +
+          '<span class="ob-kpi-at-star">⭐</span>' +
+        '</div>' +
+        '<div class="ob-kpi-at-label">tähteä</div>' +
+        (obDraftKpis.length > 1 ? '<button class="ob-remove-btn" onclick="obRemoveKpi(' + i + ')">✕</button>' : '') +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+function obUpdateKpiLabel(idx, v) { if (obDraftKpis[idx]) obDraftKpis[idx].label = v; }
+function obUpdateKpiPrize(idx, v) { if (obDraftKpis[idx]) obDraftKpis[idx].prize = v; }
+function obUpdateKpiAt(idx, v) {
+  if (!obDraftKpis[idx]) return;
+  const n = parseInt(v, 10);
+  obDraftKpis[idx].at = isNaN(n) ? 1 : Math.max(1, Math.min(999, n));
+}
+function obAddKpi() {
+  const last = obDraftKpis[obDraftKpis.length - 1];
+  const nextAt = last ? last.at + 15 : 10;
+  obDraftKpis.push({ at: nextAt, ico: '🎁', label: 'Uusi palkinto', prize: '', story: 'Upea saavutus!' });
+  renderObKpis();
+}
+function obRemoveKpi(idx) {
+  if (obDraftKpis.length <= 1) return;
+  obDraftKpis.splice(idx, 1);
+  renderObKpis();
 }
 
 function renderObSummary() {
   const kidCount = obDraftKids.filter(k => (k.name || '').trim()).length;
   const deedCount = obDraftDeeds.filter(d => (d.nm || '').trim()).length;
+  const kpiCount = obDraftKpis.length;
   const kidList = obDraftKids.filter(k => (k.name || '').trim()).map(k => {
     const r = getRole(k.roleId);
     return r.ico + ' <b style="color:' + r.color + '">' + escapeHtml(k.name) + '</b>';
@@ -1593,7 +1731,7 @@ function renderObSummary() {
   const el = document.getElementById('ob-summary-line');
   if (el) {
     el.innerHTML = 'Matkaan lähtevät: ' + (kidList || '(nimettömät)') +
-      ' — mukana <span class="hl">' + deedCount + ' hyvää tekoa</span>.';
+      ' — mukana <span class="hl">' + deedCount + ' hyvää tekoa</span> ja <span class="hl">' + kpiCount + ' palkintoporrasta</span>.';
   }
 }
 
@@ -1604,6 +1742,15 @@ function obFinish() {
   const validDeeds = obDraftDeeds
     .map(d => ({...d, nm: (d.nm || '').trim()}))
     .filter(d => d.nm.length > 0 && d.pt >= 1);
+  const validKpis = obDraftKpis
+    .map(k => ({
+      at: Math.max(1, parseInt(k.at, 10) || 1),
+      ico: k.ico || '🏆',
+      label: (k.label || '').trim() || 'Palkinto',
+      prize: (k.prize || '').trim(),
+      story: k.story || 'Hieno saavutus!'
+    }))
+    .sort((a, b) => a.at - b.at);
 
   if (validKids.length === 0) {
     alert('Lisää ainakin yksi seikkailija nimen kanssa!');
@@ -1615,9 +1762,15 @@ function obFinish() {
     obGoTo(3);
     return;
   }
+  if (validKpis.length < 1) {
+    alert('Lisää ainakin yksi palkintoporras!');
+    obGoTo(4);
+    return;
+  }
 
   state.setup.kids = validKids;
   state.setup.deeds = validDeeds;
+  state.setup.kpis = validKpis;
   state.setup.complete = true;
 
   const validIds = new Set(validKids.map(k => k.id));
@@ -1769,16 +1922,17 @@ function animateFreshStars(kidId, fromIdx, toIdx) {
 
 function renderKids() {
   const deeds = state.setup.deeds;
+  const activeKpis = kpisFrom(state).slice().sort((a, b) => a.at - b.at);
   document.getElementById('kids').innerHTML = state.setup.kids.map(k => {
     const role = getRole(k.roleId);
     const s = state.progress[k.id] || { pts: 0, history: [] };
-    const kpiRows = KPI.map(kpi => {
+    const kpiRows = activeKpis.map(kpi => {
       const done = s.pts >= kpi.at;
       const pct = Math.min(100, Math.round(s.pts / kpi.at * 100));
       const left = Math.max(0, kpi.at - s.pts);
       return '<div class="kpi-item">' +
           '<div class="kpi-head">' +
-            '<span class="kpi-name"><span class="kpi-emoji">' + kpi.ico + '</span>' + kpi.label + '</span>' +
+            '<span class="kpi-name"><span class="kpi-emoji">' + kpi.ico + '</span>' + escapeHtml(kpi.label || '') + (kpi.prize ? ' <span class="kpi-prize-inline">· ' + escapeHtml(kpi.prize) + '</span>' : '') + '</span>' +
             '<span class="kpi-status-badge ' + (done ? 'done' : '') + '">' + (done ? '✓ Saavutettu!' : left + ' puuttuu') + '</span>' +
           '</div>' +
           '<div class="track"><div class="fill ' + (done ? 'done' : '') + '" style="width:' + pct + '%; background:' + role.color + ';"></div></div>' +
@@ -1859,7 +2013,7 @@ function addDeed(kidId, deedIdx, evt) {
   setTimeout(() => {
     renderKids();
     animateFreshStars(kidId, prev, s.pts);
-    const newKpis = KPI.filter(k => prev < k.at && s.pts >= k.at);
+    const newKpis = kpisFrom(state).filter(k => prev < k.at && s.pts >= k.at);
     if (newKpis.length > 0) {
       const achievement = newKpis[newKpis.length - 1];
       setTimeout(() => celebrateKpi(kidId, achievement), 300);
