@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tähtipolku">
+<meta name="theme-color" content="#FF9800">
+<meta name="description" content="Lasten hyvien tekojen palkintotaulu — taikametsän seikkailu">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>Tähtipolku — Taikametsän seikkailut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    font-family: 'Nunito', -apple-system, sans-serif;
+    background: #F9E8C4; color: #3D2914; min-height: 100vh;
+    overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  }
+  body {
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,222,150,0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(255,196,184,0.5) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(255,239,196,0.3) 0%, transparent 60%),
+      linear-gradient(180deg, #FFF3D6 0%, #FFE8B8 100%);
+    position: relative;
+  }
+  input, button { font-family: inherit; }
+  input[type="text"] { -webkit-appearance: none; appearance: none; }
+
+  .magic-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .bg-star {
+    position: absolute; font-size: 14px; opacity: 0;
+    animation: twinkle 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 4px rgba(255,200,50,0.6));
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+    50% { opacity: 0.9; transform: scale(1) rotate(180deg); }
+  }
+  .firefly {
+    position: absolute; width: 6px; height: 6px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,230,120,1) 0%, rgba(255,200,50,0.3) 60%, transparent 100%);
+    animation: float-fly 12s ease-in-out infinite;
+    box-shadow: 0 0 8px rgba(255,220,100,0.8);
+  }
+  @keyframes float-fly {
+    0% { transform: translate(0,0); opacity: 0; }
+    10% { opacity: 1; }
+    50% { transform: translate(100px,-80px); }
+    90% { opacity: 1; }
+    100% { transform: translate(-40px,-160px); opacity: 0; }
+  }
+
+  .container { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; padding-bottom: 60px; }
+
+  .banner {
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.4) 0%, transparent 50%),
+      linear-gradient(135deg, #FFB74D 0%, #FF9800 45%, #F57C00 100%);
+    padding: 40px 24px 90px; text-align: center; position: relative; overflow: hidden;
+    box-shadow: inset 0 -4px 20px rgba(120,60,0,0.12);
+  }
+  .banner::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 70px;
+    background:
+      radial-gradient(ellipse 60px 50px at 10% 100%, #F9E8C4 50%, transparent 52%),
+      radial-gradient(ellipse 60px 50px at 30% 100%, #F9E8C4 50%, transparent 52%),
+      radial-gradient(ellipse 60px 50px at 50% 100%, #F9E8C4 50%, transparent 52%),
+      radial-gradient(ellipse 60px 50px at 70% 100%, #F9E8C4 50%, transparent 52%),
+      radial-gradient(ellipse 60px 50px at 90% 100%, #F9E8C4 50%, transparent 52%);
+  }
+  .banner-moon {
+    position: absolute; top: 24px; right: 32px; width: 52px; height: 52px;
+    background: radial-gradient(circle at 35% 35%, #FFF9C4, #FFE082);
+    border-radius: 50%; box-shadow: 0 0 24px rgba(255,235,150,0.6);
+    animation: moon-glow 3s ease-in-out infinite;
+  }
+  @keyframes moon-glow {
+    0%,100% { box-shadow: 0 0 24px rgba(255,235,150,0.6); }
+    50% { box-shadow: 0 0 40px rgba(255,235,150,0.9); }
+  }
+  .banner-cloud { position: absolute; background: rgba(255,255,255,0.7); border-radius: 50px; animation: drift 20s ease-in-out infinite; }
+  .banner-cloud::before, .banner-cloud::after { content: ''; position: absolute; background: rgba(255,255,255,0.7); border-radius: 50%; }
+  .cloud-1 { top: 30px; left: 40px; width: 80px; height: 22px; }
+  .cloud-1::before { width: 36px; height: 36px; top: -16px; left: 10px; }
+  .cloud-1::after { width: 28px; height: 28px; top: -12px; left: 40px; }
+  .cloud-2 { top: 60px; right: 120px; width: 60px; height: 18px; animation-delay: -8s; }
+  .cloud-2::before { width: 28px; height: 28px; top: -12px; left: 8px; }
+  @keyframes drift { 0%,100% { transform: translateX(0); } 50% { transform: translateX(30px); } }
+
+  .banner-title {
+    font-family: 'Fredoka One', cursive; font-size: clamp(36px, 8vw, 52px);
+    color: #3D1F00; letter-spacing: -1px; position: relative; z-index: 2;
+    text-shadow: 3px 3px 0 rgba(255,255,255,0.4), 0 2px 8px rgba(120,60,0,0.2);
+    animation: title-bounce 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes title-bounce {
+    0% { transform: scale(0.3); opacity: 0; }
+    60% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .banner-sub { font-family: 'Caveat', cursive; font-size: 22px; color: #5D2F00; margin-top: 4px; position: relative; z-index: 2; font-weight: 700; }
+  .banner-big-star {
+    font-size: 54px; position: relative; z-index: 2; display: inline-block;
+    animation: star-spin 6s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(120,60,0,0.3));
+  }
+  @keyframes star-spin {
+    0%,100% { transform: rotate(-8deg) scale(1); }
+    50% { transform: rotate(8deg) scale(1.1); }
+  }
+
+  .story-card {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+    border: 3px solid #F9A825; border-radius: 28px;
+    margin: -48px 20px 28px; padding: 24px 24px 20px;
+    position: relative; z-index: 10;
+    box-shadow: 0 4px 0 #F57C00, 0 12px 32px rgba(120,60,0,0.2);
+  }
+  .story-card::before {
+    content: '📖'; position: absolute; top: -20px; left: 24px;
+    background: #FFB74D; width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    border: 3px solid #F9A825; box-shadow: 0 3px 0 #F57C00;
+  }
+  .story-title { font-family: 'Fredoka One', cursive; font-size: 22px; color: #5D2F00; margin-left: 58px; margin-bottom: 12px; }
+  .story-text { font-family: 'Caveat', cursive; font-size: 19px; font-weight: 600; color: #5D2F00; line-height: 1.5; }
+  .story-text p { margin-bottom: 10px; }
+  .story-text .hl { background: linear-gradient(180deg, transparent 60%, #FFD54F 60%); padding: 0 3px; }
+
+  .section-title {
+    font-family: 'Fredoka One', cursive; font-size: 22px; color: #5D2F00;
+    text-align: center; margin: 0 0 16px; padding: 0 20px; position: relative;
+  }
+  .section-title::before, .section-title::after {
+    content: '✦'; color: #F57C00; font-size: 18px; margin: 0 10px; display: inline-block;
+    animation: twinkle-ornament 2s ease-in-out infinite;
+  }
+  @keyframes twinkle-ornament {
+    0%,100% { opacity: 0.5; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; margin-bottom: 32px; }
+  .kpi-box { background: white; border-radius: 20px; padding: 16px 10px 14px; text-align: center; border: 3px solid; position: relative; }
+  .kpi-box::before {
+    content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 8px; background: currentColor; border-radius: 4px; opacity: 0.25;
+  }
+  .kpi-box.tier-1 { border-color: #EC407A; color: #AD1457; background: linear-gradient(180deg, #FFF0F5 0%, #FFE4EC 100%); }
+  .kpi-box.tier-2 { border-color: #42A5F5; color: #0D47A1; background: linear-gradient(180deg, #E3F2FD 0%, #BBDEFB 100%); }
+  .kpi-box.tier-3 { border-color: #7E57C2; color: #4527A0; background: linear-gradient(180deg, #F3E5F5 0%, #E1BEE7 100%); }
+  .kpi-icon { font-size: 32px; margin-bottom: 4px; display: block; }
+  .kpi-stars { font-family: 'Fredoka One', cursive; font-size: 22px; margin-bottom: 2px; }
+  .kpi-label { font-size: 10px; font-weight: 800; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+  .kpi-prize { font-family: 'Caveat', cursive; font-size: 18px; font-weight: 700; margin-top: 6px; line-height: 1.2; }
+
+  .deeds-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px; margin-bottom: 36px; }
+  .deed { background: white; border-radius: 16px; padding: 12px 8px; text-align: center; border: 2.5px solid #FFCC80; box-shadow: 0 2px 0 #FFB74D; }
+  .deed-ico { font-size: 26px; margin-bottom: 4px; display: block; }
+  .deed-nm { font-size: 10.5px; font-weight: 800; color: #5D2F00; line-height: 1.25; min-height: 26px; display: flex; align-items: center; justify-content: center; }
+  .deed-pt { font-size: 11px; font-weight: 800; color: #F57C00; margin-top: 4px; }
+  .deed-pt .star { color: #FFB300; }
+
+  .kids { padding: 0 20px; }
+  .kid {
+    background: white; border-radius: 28px; padding: 20px; margin-bottom: 20px;
+    border: 4px solid; position: relative;
+    box-shadow: 0 6px 0 rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.06);
+  }
+  .kid::before {
+    content: ''; position: absolute; top: 10px; right: 10px; width: 80px; height: 80px;
+    border-radius: 50%; opacity: 0.08; background: currentColor; pointer-events: none;
+  }
+  .kid-top { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; position: relative; }
+  .ava {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; flex-shrink: 0; border: 4px solid white;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1), 0 6px 16px rgba(0,0,0,0.12);
+    animation: ava-idle 4s ease-in-out infinite;
+  }
+  @keyframes ava-idle {
+    0%,100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-3px) rotate(3deg); }
+  }
+  .ava.celebrating { animation: ava-celebrate 0.6s ease; }
+  @keyframes ava-celebrate {
+    0%,100% { transform: scale(1); }
+    30% { transform: scale(1.3) rotate(-15deg); }
+    60% { transform: scale(1.3) rotate(15deg); }
+  }
+  .kid-id { flex: 1; }
+  .kid-name { font-family: 'Fredoka One', cursive; font-size: 24px; line-height: 1; }
+  .kid-title { font-family: 'Caveat', cursive; font-size: 17px; font-weight: 700; margin-top: 2px; opacity: 0.85; }
+  .kid-pts { text-align: right; position: relative; }
+  .pts-num { font-family: 'Fredoka One', cursive; font-size: 38px; line-height: 1; display: inline-block; transition: transform 0.3s; }
+  .pts-num.pulse { animation: pts-pulse 0.5s ease; }
+  @keyframes pts-pulse { 0% { transform: scale(1); } 40% { transform: scale(1.4); } 100% { transform: scale(1); } }
+  .pts-lbl { font-size: 10px; font-weight: 800; color: #8D6E63; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .float-pt {
+    position: absolute; font-family: 'Fredoka One', cursive; font-size: 22px;
+    color: #FF9800; pointer-events: none;
+    animation: float-up 1.2s ease-out forwards; z-index: 10;
+    text-shadow: 0 2px 4px rgba(255,152,0,0.4);
+  }
+  @keyframes float-up {
+    0% { transform: translate(0,0) scale(0.5); opacity: 0; }
+    20% { transform: translate(-5px,-10px) scale(1.3); opacity: 1; }
+    100% { transform: translate(-10px,-60px) scale(1); opacity: 0; }
+  }
+
+  .kpi-items { margin-bottom: 14px; }
+  .kpi-item { margin-bottom: 12px; }
+  .kpi-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; font-size: 12px; font-weight: 800; }
+  .kpi-name { display: flex; align-items: center; gap: 6px; }
+  .kpi-name .kpi-emoji { font-size: 16px; }
+  .kpi-status-badge { font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 10px; background: #FFF3CC; color: #8D6E63; }
+  .kpi-status-badge.done { background: linear-gradient(135deg, #66BB6A, #4CAF50); color: white; box-shadow: 0 2px 6px rgba(76,175,80,0.3); }
+  .track { background: #F0E4D0; border-radius: 20px; height: 16px; overflow: hidden; position: relative; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); }
+  .fill {
+    height: 100%; border-radius: 20px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; overflow: hidden; background-size: 20px 20px;
+    background-image: linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, transparent 75%);
+    animation: barber-pole 2s linear infinite;
+  }
+  @keyframes barber-pole { 0% { background-position: 0 0; } 100% { background-position: 40px 0; } }
+  .fill.done { background-color: #4CAF50 !important; box-shadow: 0 0 12px rgba(76,175,80,0.6); }
+
+  .btns-section { margin-top: 14px; padding-top: 16px; border-top: 2px dashed #EAE0D5; }
+  .btns-label { font-size: 11px; font-weight: 800; color: #8D6E63; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .btns-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .dbtn {
+    font-size: 11px; font-weight: 800; padding: 8px 11px; border-radius: 18px;
+    border: 2.5px solid; background: white; cursor: pointer;
+    transition: transform 0.1s; user-select: none; -webkit-user-select: none;
+    display: inline-flex; align-items: center; gap: 3px;
+  }
+  .dbtn:active { transform: scale(0.9); }
+  .undo-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; background: #FAF4E8; border: 2px dashed #CFC1A8;
+    border-radius: 14px; margin-top: 4px;
+  }
+  .undo-info { font-size: 11px; color: #8D6E63; font-weight: 700; }
+  .undo-info .last-act { font-weight: 800; color: #5D2F00; }
+  .undo-btn {
+    font-size: 11px; font-weight: 800; padding: 7px 14px; border-radius: 16px;
+    border: 2px solid #8D6E63; background: white; color: #5D2F00;
+    cursor: pointer; transition: transform 0.1s, opacity 0.2s; white-space: nowrap;
+  }
+  .undo-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .undo-btn:active:not(:disabled) { transform: scale(0.92); }
+
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0); z-index: 998; display: none; transition: background 0.4s; }
+  .overlay.show { display: block; background: rgba(40,20,0,0.65); }
+  .popup {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0) rotate(-20deg);
+    background: white; border: 6px solid #F9A825; border-radius: 32px;
+    padding: 36px 36px 28px; text-align: center; z-index: 999;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 340px; width: 90%;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .popup.show { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  .pop-ribbon {
+    position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg, #FFCA28, #FF9800); color: white;
+    font-family: 'Fredoka One', cursive; font-size: 14px; padding: 6px 24px;
+    border-radius: 20px; white-space: nowrap; box-shadow: 0 4px 12px rgba(255,152,0,0.4); letter-spacing: 1px;
+  }
+  .pop-ico {
+    font-size: 72px; display: inline-block; animation: pop-wobble 0.8s ease infinite;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.15));
+  }
+  @keyframes pop-wobble { 0%,100% { transform: rotate(-8deg) scale(1); } 50% { transform: rotate(8deg) scale(1.1); } }
+  .pop-title { font-family: 'Fredoka One', cursive; font-size: 26px; color: #5D2F00; margin-top: 10px; line-height: 1.1; }
+  .pop-prize {
+    font-family: 'Caveat', cursive; font-size: 22px; font-weight: 700;
+    color: #F57C00; margin-top: 8px; padding: 8px 12px;
+    background: #FFF8E1; border-radius: 14px; border: 2px dashed #FFCA28;
+  }
+  .pop-story { font-family: 'Caveat', cursive; font-size: 17px; color: #8D6E63; margin-top: 12px; font-weight: 600; line-height: 1.3; }
+  .pop-btn {
+    margin-top: 22px; background: linear-gradient(135deg, #FFCA28, #FF9800);
+    border: none; border-bottom: 4px solid #EF6C00; border-radius: 20px;
+    padding: 12px 28px; font-family: 'Fredoka One', cursive; font-size: 17px;
+    color: white; cursor: pointer; width: 100%; letter-spacing: 1px;
+  }
+  .pop-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+  .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .confetti { position: absolute; top: -20px; animation-timing-function: cubic-bezier(0.1, 0.8, 0.9, 1); animation-fill-mode: forwards; will-change: transform, opacity; }
+  @keyframes confetti-fall {
+    0% { transform: translate3d(0, -20px, 0) rotate(0deg) scale(1); opacity: 1; }
+    10% { opacity: 1; }
+    100% { transform: translate3d(var(--x-end, 0px), 110vh, 0) rotate(var(--rot-end, 720deg)) scale(var(--scale-end, 0.8)); opacity: 0.8; }
+  }
+  @keyframes confetti-sway { 0%,100% { margin-left: 0; } 50% { margin-left: var(--sway, 40px); } }
+
+  footer { text-align: center; padding: 20px; font-size: 11px; color: #8D6E63; font-weight: 700; }
+  .reset-btn {
+    background: transparent; border: 1.5px solid #CFC1A8; color: #8D6E63;
+    padding: 6px 16px; border-radius: 12px; font-size: 10px; font-weight: 800;
+    cursor: pointer; letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .reset-btn:active { transform: scale(0.95); }
+  .whisper { text-align: center; font-family: 'Caveat', cursive; font-size: 20px; color: #8D6E63; margin: 4px 24px 22px; font-weight: 700; }
+
+  /* ONBOARDING */
+  .onboarding { position: relative; z-index: 5; max-width: 720px; margin: 0 auto; padding: 0 20px 40px; }
+  .ob-header { text-align: center; padding: 40px 20px 24px; position: relative; }
+  .ob-header .banner-big-star { font-size: 48px; }
+  .ob-title {
+    font-family: 'Fredoka One', cursive; font-size: 40px;
+    color: #3D1F00; letter-spacing: -1px; margin-top: 8px;
+    text-shadow: 3px 3px 0 rgba(255,255,255,0.4);
+  }
+  .ob-sub { font-family: 'Caveat', cursive; font-size: 22px; color: #5D2F00; margin-top: 2px; font-weight: 700; }
+
+  .ob-stepper { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 24px; }
+  .step-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', cursive; font-size: 14px;
+    background: white; border: 2.5px solid #FFCC80; color: #F57C00;
+    transition: all 0.3s;
+  }
+  .step-dot.active {
+    background: linear-gradient(135deg, #FFCA28, #FF9800);
+    border-color: #F57C00; color: white;
+    box-shadow: 0 4px 12px rgba(255,152,0,0.4);
+    transform: scale(1.15);
+  }
+  .step-dot.done { background: #66BB6A; border-color: #2E7D32; color: white; }
+  .step-bar { width: 28px; height: 3px; background: #FFCC80; border-radius: 2px; }
+  .step-bar.done { background: #66BB6A; }
+
+  .ob-card {
+    background: white; border: 3px solid #F9A825; border-radius: 28px;
+    padding: 28px 24px;
+    box-shadow: 0 6px 0 #F57C00, 0 16px 40px rgba(120,60,0,0.15);
+    margin-bottom: 20px;
+  }
+  .ob-card h2 { font-family: 'Fredoka One', cursive; font-size: 24px; color: #5D2F00; text-align: center; margin-bottom: 8px; }
+  .ob-card .ob-hint {
+    font-family: 'Caveat', cursive; font-size: 19px; font-weight: 600;
+    color: #8D6E63; text-align: center; margin-bottom: 20px; line-height: 1.4;
+  }
+  .ob-intro-text {
+    font-family: 'Caveat', cursive; font-size: 20px; font-weight: 600;
+    color: #5D2F00; line-height: 1.6; text-align: center;
+  }
+  .ob-intro-text p { margin-bottom: 10px; }
+  .ob-intro-text .hl { background: linear-gradient(180deg, transparent 60%, #FFD54F 60%); padding: 0 3px; }
+  .ob-emoji-big {
+    font-size: 72px; text-align: center; margin-bottom: 10px;
+    filter: drop-shadow(0 6px 12px rgba(120,60,0,0.2));
+    animation: star-spin 4s ease-in-out infinite;
+  }
+
+  .ob-kid-row {
+    display: flex; align-items: center; gap: 12px;
+    background: #FFF8E1; border: 2px solid #FFCC80;
+    border-radius: 18px; padding: 12px; margin-bottom: 10px;
+  }
+  .ob-kid-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; background: white; border: 3px solid #FFCC80;
+    cursor: pointer; flex-shrink: 0;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+    transition: transform 0.15s;
+  }
+  .ob-kid-avatar:active { transform: scale(0.95); }
+  .ob-kid-fields { flex: 1; min-width: 0; }
+  .ob-name-input {
+    width: 100%; border: 2px solid #FFCC80; background: white;
+    border-radius: 12px; padding: 8px 12px; font-size: 15px; font-weight: 700;
+    color: #5D2F00; font-family: 'Nunito', sans-serif;
+  }
+  .ob-name-input:focus { outline: none; border-color: #F57C00; }
+  .ob-role-line {
+    font-family: 'Caveat', cursive; font-size: 16px;
+    color: #8D6E63; margin-top: 4px; font-weight: 700;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .ob-role-tap { color: #F57C00; text-decoration: underline; cursor: pointer; }
+  .ob-remove-btn {
+    background: transparent; border: none; color: #8D6E63;
+    font-size: 20px; cursor: pointer; padding: 4px 8px; line-height: 1;
+  }
+  .ob-remove-btn:active { transform: scale(0.9); }
+
+  .ob-add-btn {
+    width: 100%; background: transparent; border: 2px dashed #F57C00;
+    color: #F57C00; padding: 12px; border-radius: 16px;
+    font-size: 14px; font-weight: 800; cursor: pointer; margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+  .ob-add-btn:active { transform: scale(0.98); }
+  .ob-add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .ob-deed-row {
+    display: flex; align-items: center; gap: 10px;
+    background: #FFF8E1; border: 2px solid #FFCC80;
+    border-radius: 16px; padding: 10px; margin-bottom: 8px;
+  }
+  .ob-deed-ico-btn {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: white; border: 2px solid #FFCC80;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; cursor: pointer; flex-shrink: 0;
+  }
+  .ob-deed-ico-btn:active { transform: scale(0.95); }
+  .ob-deed-name-input {
+    flex: 1; min-width: 0; border: 2px solid #FFCC80; background: white;
+    border-radius: 10px; padding: 8px 10px; font-size: 13px; font-weight: 700;
+    color: #5D2F00; font-family: 'Nunito', sans-serif;
+  }
+  .ob-deed-name-input:focus { outline: none; border-color: #F57C00; }
+  .ob-pt-group { display: flex; gap: 4px; flex-shrink: 0; }
+  .ob-pt-btn {
+    width: 32px; height: 32px; border-radius: 10px;
+    border: 2px solid #FFCC80; background: white; color: #F57C00;
+    font-size: 13px; font-weight: 800; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ob-pt-btn.selected {
+    background: linear-gradient(135deg, #FFCA28, #FF9800);
+    color: white; border-color: #F57C00;
+    box-shadow: 0 2px 4px rgba(255,152,0,0.3);
+  }
+
+  .ob-nav { display: flex; gap: 10px; margin-top: 20px; }
+  .ob-back {
+    flex: 1; background: white; border: 2.5px solid #CFC1A8;
+    color: #8D6E63; padding: 14px; border-radius: 18px;
+    font-size: 14px; font-weight: 800; cursor: pointer;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .ob-next {
+    flex: 2; background: linear-gradient(135deg, #FFCA28, #FF9800);
+    border: none; border-bottom: 4px solid #EF6C00;
+    color: white; padding: 14px; border-radius: 18px;
+    font-family: 'Fredoka One', cursive; font-size: 16px; cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .ob-next:active { transform: translateY(2px); border-bottom-width: 2px; }
+  .ob-next:disabled { opacity: 0.5; cursor: not-allowed; }
+  .ob-back:active { transform: scale(0.97); }
+
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(40,20,0,0.7);
+    z-index: 10000; display: none; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: white; border: 4px solid #F9A825; border-radius: 24px;
+    padding: 20px; max-width: 500px; width: 100%; max-height: 80vh;
+    overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .modal h3 { font-family: 'Fredoka One', cursive; font-size: 20px; color: #5D2F00; text-align: center; margin-bottom: 16px; }
+
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .role-card {
+    background: white; border: 2.5px solid #FFCC80;
+    border-radius: 16px; padding: 12px; cursor: pointer;
+    text-align: center; transition: transform 0.15s;
+  }
+  .role-card:active { transform: scale(0.96); }
+  .role-card.selected { border-color: #F57C00; background: #FFF3CC; box-shadow: 0 4px 0 #F57C00; }
+  .role-card .r-ico { font-size: 36px; display: block; margin-bottom: 4px; }
+  .role-card .r-name { font-family: 'Fredoka One', cursive; font-size: 14px; color: #5D2F00; }
+  .role-card .r-bio { font-family: 'Caveat', cursive; font-size: 13px; color: #8D6E63; margin-top: 2px; line-height: 1.2; font-weight: 600; }
+
+  .emoji-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+  .emoji-card {
+    width: 100%; aspect-ratio: 1; background: #FFF8E1;
+    border: 2px solid transparent; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; cursor: pointer;
+  }
+  .emoji-card:active { transform: scale(0.92); }
+  .emoji-card.selected { border-color: #F57C00; background: #FFF3CC; }
+
+  .modal-close {
+    width: 100%; margin-top: 16px; background: white;
+    border: 2px solid #CFC1A8; color: #5D2F00; padding: 12px;
+    border-radius: 14px; font-size: 14px; font-weight: 800; cursor: pointer;
+  }
+  .modal-close:active { transform: scale(0.98); }
+
+  .settings-btn {
+    position: absolute; top: 18px; left: 20px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.85); border: 2px solid #F57C00;
+    color: #5D2F00; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3; box-shadow: 0 3px 0 #F57C00;
+  }
+  .settings-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #F57C00; }
+
+  @media (min-width: 700px) {
+    .container { padding: 0 16px 60px; }
+    .banner { border-radius: 0 0 40px 40px; }
+    .banner-title { font-size: 54px; }
+    .role-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="magic-bg" id="magic-bg"></div>
+
+<div class="onboarding" id="onboarding" style="display:none;">
+  <div class="ob-header">
+    <div class="banner-big-star">⭐</div>
+    <div class="ob-title">Tähtipolku</div>
+    <div class="ob-sub">~ aloitetaan seikkailu ~</div>
+  </div>
+
+  <div class="ob-stepper" id="ob-stepper"></div>
+
+  <div class="ob-card" id="ob-step-1">
+    <div class="ob-emoji-big">🌟</div>
+    <h2>Tervetuloa Taikametsään</h2>
+    <div class="ob-intro-text">
+      <p>Kaukana <span class="hl">Hopeapilven takana</span> odottaa Taikametsä. Siellä kasvaa <span class="hl">Tähtipuita</span>, ja pienet Kuutontut ripustavat niihin tähtiä — yhden jokaisesta oikean maailman hyvästä teosta!</p>
+      <p>Valmistellaan seuraavaksi teidän seikkailu. ✨</p>
+    </div>
+    <div class="ob-nav">
+      <button class="ob-next" onclick="obGoTo(2)" style="flex:1;">ALOITA →</button>
+    </div>
+  </div>
+
+  <div class="ob-card" id="ob-step-2" style="display:none;">
+    <h2>Seikkailijat</h2>
+    <div class="ob-hint">Ketkä lähtevät tähtimatkalle? Anna nimi ja valitse rooli metsässä.</div>
+    <div id="ob-kids-list"></div>
+    <button class="ob-add-btn" id="ob-add-kid" onclick="obAddKid()">+ LISÄÄ SEIKKAILIJA</button>
+    <div class="ob-nav">
+      <button class="ob-back" onclick="obGoTo(1)">← Takaisin</button>
+      <button class="ob-next" onclick="obGoTo(3)">TEHTÄVÄT →</button>
+    </div>
+  </div>
+
+  <div class="ob-card" id="ob-step-3" style="display:none;">
+    <h2>Tehtävät ja tähdet</h2>
+    <div class="ob-hint">Mitä hyviä tekoja keräätte? Napauta kuvaketta vaihtaaksesi sen, ja valitse pistemäärä.</div>
+    <div id="ob-deeds-list"></div>
+    <button class="ob-add-btn" onclick="obAddDeed()">+ LISÄÄ TEHTÄVÄ</button>
+    <div class="ob-nav">
+      <button class="ob-back" onclick="obGoTo(2)">← Takaisin</button>
+      <button class="ob-next" onclick="obGoTo(4)">JATKA →</button>
+    </div>
+  </div>
+
+  <div class="ob-card" id="ob-step-4" style="display:none;">
+    <div class="ob-emoji-big">🎉</div>
+    <h2>Valmista!</h2>
+    <div class="ob-intro-text" id="ob-summary"></div>
+    <div class="ob-nav">
+      <button class="ob-back" onclick="obGoTo(3)">← Takaisin</button>
+      <button class="ob-next" onclick="obFinish()">ALOITA MATKA! 🌟</button>
+    </div>
+  </div>
+</div>
+
+<div class="container" id="main-app" style="display:none;">
+  <header class="banner">
+    <button class="settings-btn" onclick="openSettings()" title="Asetukset">⚙️</button>
+    <div class="banner-moon"></div>
+    <div class="banner-cloud cloud-1"></div>
+    <div class="banner-cloud cloud-2"></div>
+    <div class="banner-big-star">⭐</div>
+    <h1 class="banner-title">Tähtipolku</h1>
+    <div class="banner-sub">~ hyvien tekojen taikametsä ~</div>
+  </header>
+
+  <section class="story-card">
+    <h2 class="story-title">Taikametsän tarina</h2>
+    <div class="story-text">
+      <p>Kaukana <span class="hl">Hopeapilven takana</span> lepää Taikametsä. Sen sydämessä kasvaa suuria <span class="hl">Tähtipuita</span> — yksi jokaiselle seikkailijalle.</p>
+      <p>Kun yö laskeutuu, pienet Kuutontut tipuvat pilviltä puiden luo. Aina kun teet hyvän teon oikeassa maailmassa, tonttu ripustaa puuhusi uuden kirkkaan tähden! 🌟</p>
+      <p>Mitä enemmän tähtiä puu kantaa, sitä kirkkaammin se loistaa — kunnes Taikametsän <span class="hl">Kuningatar</span> näkee sen ja lähettää sinulle lahjan!</p>
+    </div>
+  </section>
+
+  <h3 class="section-title">Palkintoportaat</h3>
+  <div class="kpi-row">
+    <div class="kpi-box tier-1">
+      <span class="kpi-icon">🍭</span>
+      <div class="kpi-stars">10 ⭐</div>
+      <div class="kpi-label">Viikon sankari</div>
+      <div class="kpi-prize">Tikkari!</div>
+    </div>
+    <div class="kpi-box tier-2">
+      <span class="kpi-icon">🍦</span>
+      <div class="kpi-stars">25 ⭐</div>
+      <div class="kpi-label">Kultainen tähti</div>
+      <div class="kpi-prize">Jäätelö!</div>
+    </div>
+    <div class="kpi-box tier-3">
+      <span class="kpi-icon">🎢</span>
+      <div class="kpi-stars">50 ⭐</div>
+      <div class="kpi-label">Taikamestari</div>
+      <div class="kpi-prize">HopLop tai elokuvat!</div>
+    </div>
+  </div>
+
+  <div class="whisper">~ jokainen teko tuo uuden tähden puuhusi ~</div>
+
+  <h3 class="section-title">Teot ja tähdet</h3>
+  <div class="deeds-grid" id="deeds-grid"></div>
+
+  <div class="whisper">~ urheat seikkailijat vartioivat tähtipuitaan ~</div>
+
+  <h3 class="section-title">Metsän sankarit</h3>
+  <div class="kids" id="kids"></div>
+
+  <footer>
+    <div>🌙 Tähtipolku • Taikametsä ry</div>
+    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap;">
+      <button class="reset-btn" onclick="toggleSound()" id="sound-btn" style="font-size:16px;padding:6px 14px;">🔊</button>
+      <button class="reset-btn" onclick="openSettings()">⚙️ Muokkaa asetuksia</button>
+      <button class="reset-btn" onclick="confirmReset()">Nollaa kaikki tähdet</button>
+    </div>
+  </footer>
+</div>
+
+<div class="modal-overlay" id="role-modal">
+  <div class="modal">
+    <h3>Valitse rooli</h3>
+    <div class="role-grid" id="role-grid"></div>
+    <button class="modal-close" onclick="closeRoleModal()">Sulje</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="emoji-modal">
+  <div class="modal">
+    <h3>Valitse kuvake</h3>
+    <div class="emoji-grid" id="emoji-grid"></div>
+    <button class="modal-close" onclick="closeEmojiModal()">Sulje</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closePopup()"></div>
+<div class="popup" id="popup">
+  <div class="pop-ribbon" id="pop-ribbon">UUSI TITTELI</div>
+  <div class="pop-ico" id="pop-ico">🍭</div>
+  <div class="pop-title" id="pop-title"></div>
+  <div class="pop-prize" id="pop-prize"></div>
+  <div class="pop-story" id="pop-story"></div>
+  <button class="pop-btn" onclick="closePopup()">HURRAA! 🎉</button>
+</div>
+
+<div class="confetti-container" id="confetti-container"></div>
+
+<script>
+const ROLES = [
+  { id:'fox', ico:'🦊', title:'Ketturitari', bio:'vartioi Hopeametsän eteläporttia', color:'#E65100', bg:'#FFE0B2', accent:'#FF7043' },
+  { id:'butterfly', ico:'🦋', title:'Perhoskeijutar', bio:'lentää viestejä kuun ja puiden välillä', color:'#6A1B9A', bg:'#F3E5F5', accent:'#AB47BC' },
+  { id:'bear', ico:'🐻', title:'Karhuseikkailija', bio:'etsii eksyneitä tähtiä laaksoista', color:'#00695C', bg:'#E0F2F1', accent:'#26A69A' },
+  { id:'owl', ico:'🦉', title:'Pöllötietäjä', bio:'lukee tähdistä vanhoja tarinoita', color:'#4E342E', bg:'#EFEBE9', accent:'#795548' },
+  { id:'dragon', ico:'🐉', title:'Lohikäärmesankari', bio:'suojelee tähtipuita vuoristossa', color:'#D84315', bg:'#FFCCBC', accent:'#FF5722' },
+  { id:'unicorn', ico:'🦄', title:'Yksisarvisprinsessa', bio:'loihtii sateenkaaria ja toiveita', color:'#C2185B', bg:'#FCE4EC', accent:'#EC407A' },
+  { id:'wolf', ico:'🐺', title:'Susiseikkailija', bio:'johtaa laumaa öiden yli', color:'#37474F', bg:'#CFD8DC', accent:'#546E7A' },
+  { id:'bunny', ico:'🐰', title:'Jäniskeiju', bio:'juoksee kuuta nopeammin', color:'#AD1457', bg:'#F8BBD0', accent:'#F06292' },
+  { id:'lion', ico:'🦁', title:'Leijonaprinssi', bio:'jakaa rohkeutta muille', color:'#BF360C', bg:'#FFE0B2', accent:'#FF7043' },
+  { id:'hedgehog', ico:'🦔', title:'Siilipuutarhuri', bio:'hoitaa taikametsän kasveja', color:'#5D4037', bg:'#D7CCC8', accent:'#8D6E63' },
+  { id:'turtle', ico:'🐢', title:'Kilpikonnaviisas', bio:'muistaa kaikkien tähtien nimet', color:'#2E7D32', bg:'#C8E6C9', accent:'#66BB6A' },
+  { id:'dolphin', ico:'🐬', title:'Delfiiniprinssi', bio:'hyppelee tähtien yllä aalloilla', color:'#0277BD', bg:'#B3E5FC', accent:'#29B6F6' },
+  { id:'frog', ico:'🐸', title:'Sammakkotaikuri', bio:'tekee vihreitä loitsuja lammella', color:'#558B2F', bg:'#DCEDC8', accent:'#8BC34A' },
+  { id:'panda', ico:'🐼', title:'Pandatietäjä', bio:'opettaa rauhaa metsän eläimille', color:'#263238', bg:'#ECEFF1', accent:'#607D8B' },
+];
+
+const DEFAULT_DEEDS = [
+  { ico:'🤝', nm:'Pyysin anteeksi', pt:1 },
+  { ico:'👕', nm:'Riisuin vaatteet', pt:2 },
+  { ico:'👖', nm:'Puin itse vaatteet', pt:2 },
+  { ico:'🦷', nm:'Harjasin hampaat pyydettäessä', pt:1 },
+  { ico:'🌙', nm:'Menin nukkumaan kiltisti', pt:1 },
+  { ico:'🍽️', nm:'Istuin ruokapöydässä kiltisti', pt:1 },
+  { ico:'🤗', nm:'Olin kiltisti hoidossa', pt:1 },
+  { ico:'🧺', nm:'Vein vaatteet pyykikoriin', pt:1 },
+  { ico:'🧹', nm:'Siistin leluni', pt:1 },
+  { ico:'🙋', nm:'Odotin omaa vuoroa', pt:1 },
+  { ico:'💪', nm:'Autoin kotitöissä', pt:1 },
+  { ico:'💛', nm:'Olin kiltti sisarukselle', pt:1 },
+];
+
+const DEFAULT_KIDS = [
+  { id:'k1', name:'Edvin', roleId:'fox' },
+  { id:'k2', name:'Eleana', roleId:'butterfly' },
+  { id:'k3', name:'Eilon', roleId:'bear' },
+];
+
+const DEED_EMOJIS = [
+  '🤝','👕','👖','🦷','🌙','🍽️','🤗','🧺','🧹','🙋','💪','💛',
+  '🎨','📚','🧸','🎵','🛁','🍎','🥦','🥕','🧃','🚗','⚽','🏃',
+  '🙏','🤲','🤫','👂','😊','✨','🌟','⭐','💖','🌈','🐕','🐈',
+  '👶','👦','👧','🤱','🧽','🍚','🫧','🛏️','🚿','👟','🎒','📖',
+  '🧼','🪥','🪑','🚲','🌷','🥛','🍌','🍪','🪀','🎲','🖍️','✏️',
+];
+
+const KPI = [
+  { at:10, ico:'🍭', label:'Viikon sankari', prize:'Tikkari!',
+    story:'Kuutonttu toi sinulle makean yllätyksen pilvien päältä!' },
+  { at:25, ico:'🍦', label:'Kultainen tähti', prize:'Jäätelö!',
+    story:'Kuningatar itse katsoo puutasi — se loistaa kullalta!' },
+  { at:50, ico:'🎢', label:'Taikamestari', prize:'HopLop tai elokuvat!',
+    story:'Kaikki Taikametsän tontut laulavat nimeäsi! Olet legenda.' },
+];
+
+const STORAGE_KEY = 'tahtipolku_v5';
+let state = {
+  setup: { complete: false, kids: [], deeds: [] },
+  progress: {},
+  soundOn: true,
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.setup) {
+        state.setup = parsed.setup;
+        state.progress = parsed.progress || {};
+        state.soundOn = parsed.soundOn !== false;
+        state.setup.kids.forEach(k => {
+          if (!state.progress[k.id]) state.progress[k.id] = { pts: 0, history: [] };
+        });
+      }
+    }
+  } catch(e) { console.warn('load failed', e); }
+}
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+function getRole(roleId) { return ROLES.find(r => r.id === roleId) || ROLES[0]; }
+
+let audioCtx = null;
+function getCtx() {
+  if (!audioCtx) { try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return null; } }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playTone(freq, duration, type, volume, delay) {
+  if (!state.soundOn) return;
+  const ctx = getCtx(); if (!ctx) return;
+  const t = ctx.currentTime + (delay || 0);
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.value = freq;
+  osc.connect(gain); gain.connect(ctx.destination);
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(volume, t + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + duration);
+  osc.start(t); osc.stop(t + duration + 0.05);
+}
+function playClick() {
+  playTone(880, 0.12, 'sine', 0.18, 0);
+  playTone(1318.5, 0.18, 'sine', 0.14, 0.04);
+  playTone(1760, 0.2, 'sine', 0.08, 0.08);
+}
+function playUndo() {
+  playTone(523, 0.1, 'sine', 0.12, 0);
+  playTone(392, 0.15, 'sine', 0.1, 0.05);
+}
+function playMilestone() {
+  if (!state.soundOn) return;
+  const arp = [523.25, 659.25, 783.99, 1046.5, 1318.5];
+  arp.forEach((f, i) => playTone(f, 0.25, 'triangle', 0.22, i * 0.09));
+  setTimeout(() => {
+    playTone(523.25, 1.2, 'triangle', 0.15, 0);
+    playTone(659.25, 1.2, 'triangle', 0.15, 0);
+    playTone(783.99, 1.2, 'triangle', 0.15, 0);
+    playTone(1046.5, 1.2, 'triangle', 0.12, 0);
+    playTone(2093, 0.3, 'sine', 0.08, 0.3);
+    playTone(2637, 0.25, 'sine', 0.07, 0.5);
+    playTone(3136, 0.3, 'sine', 0.06, 0.7);
+  }, 520);
+}
+function toggleSound() {
+  state.soundOn = !state.soundOn;
+  saveState();
+  updateSoundBtn();
+  if (state.soundOn) playClick();
+}
+function updateSoundBtn() {
+  const btn = document.getElementById('sound-btn');
+  if (btn) btn.textContent = state.soundOn ? '🔊' : '🔇';
+}
+
+function buildMagicBg() {
+  const bg = document.getElementById('magic-bg');
+  const emojis = ['⭐','✨','🌟','💫'];
+  for (let i = 0; i < 22; i++) {
+    const star = document.createElement('div');
+    star.className = 'bg-star';
+    star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 4 + 's';
+    star.style.animationDuration = (3 + Math.random() * 3) + 's';
+    star.style.fontSize = (10 + Math.random() * 12) + 'px';
+    bg.appendChild(star);
+  }
+  for (let i = 0; i < 8; i++) {
+    const f = document.createElement('div');
+    f.className = 'firefly';
+    f.style.left = Math.random() * 100 + '%';
+    f.style.top = (30 + Math.random() * 60) + '%';
+    f.style.animationDelay = Math.random() * 12 + 's';
+    f.style.animationDuration = (10 + Math.random() * 6) + 's';
+    bg.appendChild(f);
+  }
+}
+
+let obDraftKids = [];
+let obDraftDeeds = [];
+let obCurrentStep = 1;
+let rolePickerKidIdx = -1;
+let emojiPickerDeedIdx = -1;
+
+function obInit(fromSettings) {
+  obDraftKids = state.setup.kids.length > 0
+    ? JSON.parse(JSON.stringify(state.setup.kids))
+    : JSON.parse(JSON.stringify(DEFAULT_KIDS));
+  obDraftDeeds = state.setup.deeds.length > 0
+    ? JSON.parse(JSON.stringify(state.setup.deeds))
+    : JSON.parse(JSON.stringify(DEFAULT_DEEDS));
+  document.getElementById('onboarding').style.display = 'block';
+  document.getElementById('main-app').style.display = 'none';
+  obGoTo(fromSettings ? 2 : 1);
+}
+
+function obGoTo(step) {
+  obCurrentStep = step;
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('ob-step-' + i).style.display = (i === step) ? 'block' : 'none';
+  }
+  renderStepper();
+  if (step === 2) renderObKids();
+  if (step === 3) renderObDeeds();
+  if (step === 4) renderObSummary();
+  window.scrollTo(0, 0);
+}
+
+function renderStepper() {
+  const steps = [1, 2, 3, 4];
+  const html = steps.map((n, i) => {
+    const cls = n < obCurrentStep ? 'done' : (n === obCurrentStep ? 'active' : '');
+    const dot = '<div class="step-dot ' + cls + '">' + (n < obCurrentStep ? '✓' : n) + '</div>';
+    const bar = i < 3 ? '<div class="step-bar ' + (n < obCurrentStep ? 'done' : '') + '"></div>' : '';
+    return dot + bar;
+  }).join('');
+  document.getElementById('ob-stepper').innerHTML = html;
+}
+
+function renderObKids() {
+  const list = document.getElementById('ob-kids-list');
+  list.innerHTML = obDraftKids.map((k, i) => {
+    const role = getRole(k.roleId);
+    return '<div class="ob-kid-row" style="border-color:' + role.accent + '">' +
+      '<div class="ob-kid-avatar" style="background:' + role.bg + ';border-color:' + role.accent + '" onclick="openRolePicker(' + i + ')">' + role.ico + '</div>' +
+      '<div class="ob-kid-fields">' +
+        '<input type="text" class="ob-name-input" value="' + escapeHtml(k.name) + '" placeholder="Nimi" oninput="obUpdateKidName(' + i + ', this.value)" maxlength="20" style="border-color:' + role.accent + '">' +
+        '<div class="ob-role-line">✦ <b style="color:' + role.color + '">' + role.title + '</b> <span class="ob-role-tap" onclick="openRolePicker(' + i + ')">(vaihda)</span></div>' +
+      '</div>' +
+      (obDraftKids.length > 1 ? '<button class="ob-remove-btn" onclick="obRemoveKid(' + i + ')">✕</button>' : '') +
+    '</div>';
+  }).join('');
+  const addBtn = document.getElementById('ob-add-kid');
+  addBtn.disabled = obDraftKids.length >= 6;
+  addBtn.textContent = obDraftKids.length >= 6 ? 'Max 6 seikkailijaa' : '+ LISÄÄ SEIKKAILIJA';
+}
+
+function obUpdateKidName(idx, name) { if (obDraftKids[idx]) obDraftKids[idx].name = name; }
+
+function obAddKid() {
+  if (obDraftKids.length >= 6) return;
+  const usedRoles = obDraftKids.map(k => k.roleId);
+  const availableRole = ROLES.find(r => !usedRoles.includes(r.id)) || ROLES[0];
+  obDraftKids.push({ id: 'k' + Date.now(), name: '', roleId: availableRole.id });
+  renderObKids();
+}
+
+function obRemoveKid(idx) {
+  if (obDraftKids.length <= 1) return;
+  obDraftKids.splice(idx, 1);
+  renderObKids();
+}
+
+function openRolePicker(kidIdx) {
+  rolePickerKidIdx = kidIdx;
+  const current = obDraftKids[kidIdx].roleId;
+  const grid = document.getElementById('role-grid');
+  grid.innerHTML = ROLES.map(r =>
+    '<div class="role-card ' + (r.id === current ? 'selected' : '') + '" onclick="selectRole(\'' + r.id + '\')" style="' + (r.id === current ? 'border-color:' + r.accent : '') + '">' +
+      '<span class="r-ico">' + r.ico + '</span>' +
+      '<div class="r-name" style="color:' + r.color + '">' + r.title + '</div>' +
+      '<div class="r-bio">' + r.bio + '</div>' +
+    '</div>'
+  ).join('');
+  document.getElementById('role-modal').classList.add('show');
+}
+function selectRole(roleId) {
+  if (rolePickerKidIdx >= 0) {
+    obDraftKids[rolePickerKidIdx].roleId = roleId;
+    renderObKids();
+  }
+  closeRoleModal();
+}
+function closeRoleModal() {
+  document.getElementById('role-modal').classList.remove('show');
+  rolePickerKidIdx = -1;
+}
+
+function renderObDeeds() {
+  const list = document.getElementById('ob-deeds-list');
+  list.innerHTML = obDraftDeeds.map((d, i) =>
+    '<div class="ob-deed-row">' +
+      '<button class="ob-deed-ico-btn" onclick="openEmojiPicker(' + i + ')">' + d.ico + '</button>' +
+      '<input type="text" class="ob-deed-name-input" value="' + escapeHtml(d.nm) + '" placeholder="Teon nimi" oninput="obUpdateDeedName(' + i + ', this.value)" maxlength="40">' +
+      '<div class="ob-pt-group">' +
+        [1,2,3].map(p => '<button class="ob-pt-btn ' + (d.pt === p ? 'selected' : '') + '" onclick="obUpdateDeedPt(' + i + ', ' + p + ')">' + p + '</button>').join('') +
+      '</div>' +
+      (obDraftDeeds.length > 3 ? '<button class="ob-remove-btn" onclick="obRemoveDeed(' + i + ')">✕</button>' : '') +
+    '</div>'
+  ).join('');
+}
+function obUpdateDeedName(idx, name) { if (obDraftDeeds[idx]) obDraftDeeds[idx].nm = name; }
+function obUpdateDeedPt(idx, pt) {
+  if (obDraftDeeds[idx]) { obDraftDeeds[idx].pt = pt; renderObDeeds(); }
+}
+function obAddDeed() { obDraftDeeds.push({ ico: '✨', nm: '', pt: 1 }); renderObDeeds(); }
+function obRemoveDeed(idx) {
+  if (obDraftDeeds.length <= 3) return;
+  obDraftDeeds.splice(idx, 1);
+  renderObDeeds();
+}
+
+function openEmojiPicker(deedIdx) {
+  emojiPickerDeedIdx = deedIdx;
+  const current = obDraftDeeds[deedIdx].ico;
+  const grid = document.getElementById('emoji-grid');
+  grid.innerHTML = DEED_EMOJIS.map(e =>
+    '<div class="emoji-card ' + (e === current ? 'selected' : '') + '" onclick="selectEmoji(\'' + e + '\')">' + e + '</div>'
+  ).join('');
+  document.getElementById('emoji-modal').classList.add('show');
+}
+function selectEmoji(ico) {
+  if (emojiPickerDeedIdx >= 0) {
+    obDraftDeeds[emojiPickerDeedIdx].ico = ico;
+    renderObDeeds();
+  }
+  closeEmojiModal();
+}
+function closeEmojiModal() {
+  document.getElementById('emoji-modal').classList.remove('show');
+  emojiPickerDeedIdx = -1;
+}
+
+function renderObSummary() {
+  const kidCount = obDraftKids.filter(k => (k.name || '').trim()).length;
+  const deedCount = obDraftDeeds.filter(d => (d.nm || '').trim()).length;
+  const kidList = obDraftKids.filter(k => (k.name || '').trim()).map(k => {
+    const r = getRole(k.roleId);
+    return r.ico + ' ' + k.name;
+  }).join(', ');
+  document.getElementById('ob-summary').innerHTML =
+    '<p><span class="hl">' + kidCount + ' seikkailija' + (kidCount !== 1 ? 'a' : '') + '</span> lähtee matkalle:</p>' +
+    '<p style="font-family:\'Fredoka One\',cursive;font-size:18px;color:#5D2F00;">' + (kidList || '(nimettömät)') + '</p>' +
+    '<p>Olette valinneet <span class="hl">' + deedCount + ' tehtävä' + (deedCount !== 1 ? 'ä' : '') + '</span> joista saa tähtiä. ✨</p>' +
+    '<p>Onnea matkaan — kerätkää yhdessä!</p>';
+}
+
+function obFinish() {
+  const validKids = obDraftKids
+    .map(k => ({...k, name: (k.name || '').trim()}))
+    .filter(k => k.name.length > 0);
+  const validDeeds = obDraftDeeds
+    .map(d => ({...d, nm: (d.nm || '').trim()}))
+    .filter(d => d.nm.length > 0 && d.pt >= 1);
+
+  if (validKids.length === 0) {
+    alert('Lisää ainakin yksi seikkailija nimen kanssa!');
+    obGoTo(2);
+    return;
+  }
+  if (validDeeds.length < 1) {
+    alert('Lisää ainakin yksi tehtävä!');
+    obGoTo(3);
+    return;
+  }
+
+  state.setup.kids = validKids;
+  state.setup.deeds = validDeeds;
+  state.setup.complete = true;
+
+  const validIds = new Set(validKids.map(k => k.id));
+  Object.keys(state.progress).forEach(id => {
+    if (!validIds.has(id)) delete state.progress[id];
+  });
+  validKids.forEach(k => {
+    if (!state.progress[k.id]) state.progress[k.id] = { pts: 0, history: [] };
+  });
+
+  saveState();
+  showMainApp();
+}
+
+function openSettings() { obInit(true); }
+
+function showMainApp() {
+  document.getElementById('onboarding').style.display = 'none';
+  document.getElementById('main-app').style.display = 'block';
+  renderDeeds();
+  renderKids();
+  updateSoundBtn();
+  window.scrollTo(0, 0);
+}
+
+function renderDeeds() {
+  document.getElementById('deeds-grid').innerHTML = state.setup.deeds.map(d =>
+    '<div class="deed">' +
+      '<span class="deed-ico">' + d.ico + '</span>' +
+      '<div class="deed-nm">' + escapeHtml(d.nm) + '</div>' +
+      '<div class="deed-pt">+' + d.pt + ' <span class="star">⭐</span></div>' +
+    '</div>'
+  ).join('');
+}
+
+function renderKids() {
+  const deeds = state.setup.deeds;
+  document.getElementById('kids').innerHTML = state.setup.kids.map(k => {
+    const role = getRole(k.roleId);
+    const s = state.progress[k.id] || { pts: 0, history: [] };
+    const kpiRows = KPI.map(kpi => {
+      const done = s.pts >= kpi.at;
+      const pct = Math.min(100, Math.round(s.pts / kpi.at * 100));
+      const left = Math.max(0, kpi.at - s.pts);
+      return '<div class="kpi-item">' +
+          '<div class="kpi-head">' +
+            '<span class="kpi-name"><span class="kpi-emoji">' + kpi.ico + '</span>' + kpi.label + '</span>' +
+            '<span class="kpi-status-badge ' + (done ? 'done' : '') + '">' + (done ? '✓ Saavutettu!' : left + ' puuttuu') + '</span>' +
+          '</div>' +
+          '<div class="track"><div class="fill ' + (done ? 'done' : '') + '" style="width:' + pct + '%; background:' + role.color + ';"></div></div>' +
+        '</div>';
+    }).join('');
+
+    const addBtns = deeds.map((d, i) =>
+      '<button class="dbtn" style="border-color:' + role.color + ';color:' + role.color + '" onclick="addDeed(\'' + k.id + '\', ' + i + ', event)">' + d.ico + ' +' + d.pt + '</button>'
+    ).join('');
+
+    const last = s.history && s.history.length > 0 ? s.history[s.history.length - 1] : null;
+    const undoInfo = last
+      ? 'Viimeisin: <span class="last-act">' + last.ico + ' ' + escapeHtml(last.nm) + ' (+' + last.pt + ')</span>'
+      : 'Ei peruutettavia tekoja';
+
+    return '<div class="kid" style="border-color:' + role.accent + ';color:' + role.color + '" id="kid-' + k.id + '">' +
+      '<div class="kid-top">' +
+        '<div class="ava" id="ava-' + k.id + '" style="background:' + role.bg + '">' + role.ico + '</div>' +
+        '<div class="kid-id">' +
+          '<div class="kid-name">' + escapeHtml(k.name) + '</div>' +
+          '<div class="kid-title">✦ ' + role.title + ', ' + role.bio + '</div>' +
+        '</div>' +
+        '<div class="kid-pts">' +
+          '<div class="pts-num" id="pts-' + k.id + '">' + s.pts + '</div>' +
+          '<div class="pts-lbl">tähteä</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="kpi-items">' + kpiRows + '</div>' +
+      '<div class="btns-section">' +
+        '<div class="btns-label">✨ Mitä hyvää tänään?</div>' +
+        '<div class="btns-row">' + addBtns + '</div>' +
+        '<div class="undo-bar">' +
+          '<div class="undo-info">' + undoInfo + '</div>' +
+          '<button class="undo-btn" onclick="undoLast(\'' + k.id + '\')" ' + (last ? '' : 'disabled') + '>↩ Peruuta</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function addDeed(kidId, deedIdx, evt) {
+  const d = state.setup.deeds[deedIdx];
+  if (!d) return;
+  const s = state.progress[kidId];
+  if (!s) return;
+  const prev = s.pts;
+  s.pts += d.pt;
+  s.history.push({ ico: d.ico, nm: d.nm, pt: d.pt, ts: Date.now() });
+  saveState();
+  playClick();
+
+  const ptsEl = document.getElementById('pts-' + kidId);
+  ptsEl.textContent = s.pts;
+  ptsEl.classList.remove('pulse'); void ptsEl.offsetWidth; ptsEl.classList.add('pulse');
+
+  const ava = document.getElementById('ava-' + kidId);
+  ava.classList.remove('celebrating'); void ava.offsetWidth; ava.classList.add('celebrating');
+
+  if (evt && evt.target) {
+    const rect = ptsEl.getBoundingClientRect();
+    const float = document.createElement('div');
+    float.className = 'float-pt';
+    float.textContent = '+' + d.pt;
+    float.style.left = rect.left + window.scrollX - 20 + 'px';
+    float.style.top = rect.top + window.scrollY + 'px';
+    document.body.appendChild(float);
+    setTimeout(() => float.remove(), 1300);
+  }
+
+  setTimeout(() => {
+    renderKids();
+    const newKpis = KPI.filter(k => prev < k.at && s.pts >= k.at);
+    if (newKpis.length > 0) {
+      const achievement = newKpis[newKpis.length - 1];
+      setTimeout(() => celebrateKpi(kidId, achievement), 300);
+    }
+  }, 50);
+}
+
+function undoLast(kidId) {
+  const s = state.progress[kidId];
+  if (!s || !s.history || s.history.length === 0) return;
+  const last = s.history.pop();
+  s.pts = Math.max(0, s.pts - last.pt);
+  saveState();
+  playUndo();
+  renderKids();
+}
+
+function celebrateKpi(kidId, kpi) {
+  const kid = state.setup.kids.find(k => k.id === kidId);
+  if (!kid) return;
+  document.getElementById('pop-ico').textContent = kpi.ico;
+  document.getElementById('pop-title').textContent = kid.name + ' on nyt ' + kpi.label + '!';
+  document.getElementById('pop-prize').textContent = '🎁 ' + kpi.prize;
+  document.getElementById('pop-story').textContent = kpi.story;
+  document.getElementById('pop-ribbon').textContent = 'UUSI TITTELI • ' + kpi.at + ' ⭐';
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('popup').classList.add('show');
+  playMilestone();
+  launchConfetti();
+}
+
+function closePopup() {
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('popup').classList.remove('show');
+}
+
+function launchConfetti() {
+  const container = document.getElementById('confetti-container');
+  const emojiPieces = ['⭐','🌟','✨','💫','🎉','💖','🍭','🎊','🌈','💛'];
+  const shapes = ['square', 'circle', 'rectangle'];
+  const colors = ['#FFCA28','#FF9800','#F06292','#BA68C8','#4FC3F7','#81C784','#FF7043','#26A69A','#AB47BC'];
+  const total = 220;
+  for (let i = 0; i < total; i++) {
+    setTimeout(() => {
+      const piece = document.createElement('div');
+      piece.className = 'confetti';
+      const startLeft = Math.random() * 100;
+      const duration = 3 + Math.random() * 3;
+      const sway = (Math.random() - 0.5) * 80;
+      const xEnd = (Math.random() - 0.5) * 400;
+      const rotEnd = (Math.random() - 0.5) * 1440;
+      const scaleEnd = 0.4 + Math.random() * 0.8;
+      if (Math.random() < 0.6) {
+        piece.textContent = emojiPieces[Math.floor(Math.random() * emojiPieces.length)];
+        piece.style.fontSize = (14 + Math.random() * 18) + 'px';
+      } else {
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = 6 + Math.random() * 10;
+        piece.style.backgroundColor = color;
+        piece.style.width = size + 'px';
+        piece.style.height = (shape === 'rectangle' ? size * 2 : size) + 'px';
+        if (shape === 'circle') piece.style.borderRadius = '50%';
+        else if (shape === 'square') piece.style.borderRadius = '2px';
+        piece.style.boxShadow = '0 0 4px ' + color + '55';
+      }
+      piece.style.left = startLeft + 'vw';
+      piece.style.setProperty('--x-end', xEnd + 'px');
+      piece.style.setProperty('--rot-end', rotEnd + 'deg');
+      piece.style.setProperty('--scale-end', scaleEnd);
+      piece.style.setProperty('--sway', sway + 'px');
+      piece.style.animation = 'confetti-fall ' + duration + 's forwards, confetti-sway ' + (1 + Math.random()) + 's ease-in-out infinite';
+      container.appendChild(piece);
+      setTimeout(() => piece.remove(), duration * 1000 + 200);
+    }, i * 15);
+  }
+}
+
+function confirmReset() {
+  if (confirm('Haluatko varmasti nollata kaikkien sankareiden tähdet?')) {
+    state.setup.kids.forEach(k => { state.progress[k.id] = { pts: 0, history: [] }; });
+    saveState();
+    renderKids();
+  }
+}
+
+function escapeHtml(s) {
+  return String(s || '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+loadState();
+buildMagicBg();
+if (state.setup.complete && state.setup.kids.length > 0 && state.setup.deeds.length > 0) {
+  showMainApp();
+} else {
+  obInit(false);
+}
+
+// Register service worker for offline support (PWA)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed:', err));
+  });
+}
+</script>
+
+</body>
+</html>
