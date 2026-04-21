@@ -1,54 +1,39 @@
-# 🌟 Tähtipolku
+# 🌟 Tähtipolku (Star path)
 
-Lasten hyvien tekojen palkintotaulu — taikametsän seikkailu.
+* A project by the Institute for the Study of Humanity *
 
-Tähtipolku on ilmainen, avoin web-sovellus perheille. Sovellus auttaa palkitsemaan lapsia hyvistä teoista kerättävillä tähdillä, ja kun tähtiä on tarpeeksi, aukenee pieniä palkintoja. Koko sovellus toimii suomeksi, ilman tilejä, ilman mainoksia, ilman pilvipalveluita — kaikki tieto tallentuu omaan laitteeseen.
+A reward tracker for children's good deeds — a magical journey through the Enchanted Forest.
+
+Tähtipolku is a free, open-source web application for families. The app helps reward children for good deeds with stars, and when they collect enough stars, small rewards unlock. The entire app works in Finnish, requires no accounts, no ads, no cloud services — all data stays on the device.
 
 ![Tähtipolku](./icon-512.png)
 
-## ✨ Ominaisuudet
+## ✨ Features
 
-- **Alustus omalle perheelle**: lisää 1–6 lasta, anna nimet, valitse jokaiselle rooli metsässä (Ketturitari, Perhoskeijutar, Karhuseikkailija, Lohikäärmesankari ym. — 14 vaihtoehtoa)
-- **Muokattavat tehtävät**: määritä omat hyvät teot ja niistä saatavat tähdet (1–3 / teko)
-- **3-portainen palkintojärjestelmä**: 10 ⭐ Tikkari, 25 ⭐ Jäätelö, 50 ⭐ HopLop tai elokuvat
-- **Taikametsän tarina**: Kuutontut, Tähtipuut ja Taikametsän Kuningatar
-- **Juhlat**: konfetti ja soiva fanfaari kun palkintoraja ylittyy
-- **Äänimaailma**: kevyt klik-ääni teoista, pehmeä peruutus, riemukas melodia rajapyykeistä
-- **Toimii offline**: kerran ladattuna sovellus toimii ilman nettiyhteyttä
-- **Asennettavissa kotivalikkoon**: iPhonella, iPadilla ja Androidilla "Lisää aloitusnäyttöön" tekee siitä oikean näköisen appisin
+- **Family Setup**: add 1–6 children, give them names, choose roles for each in the forest (Fox Knight, Butterfly Fairy, Bear Adventurer, Dragon Hero, and 10 more options)
+- **Custom Deeds**: define your own good deeds and how many stars they earn (1–3 stars per deed)
+- **3-Tier Reward System**: 10 ⭐ Candy, 25 ⭐ Ice Cream, 50 ⭐ Amusement Park or Movies
+- **Enchanted Forest Story**: Moon Elves, Star Trees, and the Queen of the Enchanted Forest
+- **Celebrations**: confetti and triumphant music when reward milestones are reached
+- **Sound Design**: cheerful click sounds for deeds, soft undo tones, joyful milestone fanfare
+- **Works Offline**: once loaded, the app works without internet
+- **Install to Home Screen**: on iPhone, iPad, and Android — "Add to Home Screen" makes it look like a real app
 
-## 🚀 Käyttö
+## 🚀 Usage
 
-1. Avaa sivu selaimessa: `https://<käyttäjänimesi>.github.io/tahtipolku/`
-2. Täytä onboarding (seikkailijat ja tehtävät)
-3. iPadilla tai puhelimella: lisää kotivalikkoon ("Share → Add to Home Screen")
-4. Kerätkää tähtiä yhdessä!
+1. Open in browser: `https://<username>.github.io/tahtipolku/`
+2. Complete onboarding (add children and deeds)
+3. On iPad or phone: tap Share → "Add to Home Screen"
+4. Collect stars together!
 
-Kaikki data tallentuu vain laitteen selaimen localStorageen — mikään ei lähde verkkoon.
+All data is stored only in the device's browser localStorage — nothing goes to the internet.
 
-## 🛠 Tekniikka
+## 🛠 Technology
 
-- Vanilla HTML/CSS/JavaScript — ei rakennusvaiheita, ei riippuvuuksia
-- Web Audio API äänille (ei audiotiedostoja)
-- Service Worker offline-tukeen
-- PWA manifest kotivalikko-asennukseen
-- localStorage tallennukseen
+- Vanilla HTML/CSS/JavaScript — no build step, no dependencies
+- Web Audio API for sound (no audio files)
+- Service Worker for offline support
+- PWA manifest for home screen installation
+- localStorage for persistent storage
 
-## 📁 Tiedostot
-
-```
-index.html                  — pääsovellus
-manifest.json               — PWA-manifesti
-sw.js                       — service worker (offline-tuki)
-icon-192.png                — ikoni
-icon-512.png                — ikoni (iso)
-icon-512-maskable.png       — maskable ikoni Androidille
-```
-
-## 📜 Lisenssi
-
-MIT — vapaasti käytettävissä, muokattavissa ja jaettavissa.
-
----
-
-Rakennettu rakkaudella Turussa ✨
+## 📁 Files
