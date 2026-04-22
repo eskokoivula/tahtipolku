@@ -5,7 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tähtipolku">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Tähtipolku">
+<meta name="theme-color" content="#FF9800">
 <title>Tähtipolku — Taikametsän seikkailut</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -1593,30 +1603,29 @@
 
       <!-- ⭐ CENTER: Hopeapilvi (silver cloud) with Kuutonttu, tappable ⭐ -->
       <button class="ob-cloud" onclick="obCloudTapped(event)" aria-label="Napauta Hopeapilveä">
-        <svg viewBox="0 0 180 100" width="180" height="100" class="ob-cloud-svg">
+        <svg viewBox="0 0 180 100" width="180" height="100" class="ob-cloud-svg" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="cloudGrad" cx="50%" cy="40%" r="60%">
-              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
-              <stop offset="70%" stop-color="#F0F4F8" stop-opacity="1"/>
-              <stop offset="100%" stop-color="#CFD8DC" stop-opacity="0.85"/>
-            </radialGradient>
-            <radialGradient id="cloudGlow" cx="50%" cy="50%" r="60%">
-              <stop offset="60%" stop-color="rgba(255,235,150,0.45)" stop-opacity="0.45"/>
-              <stop offset="100%" stop-color="rgba(255,235,150,0)" stop-opacity="0"/>
+            <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#FFFFFF"/>
+              <stop offset="60%" stop-color="#F0F4F8"/>
+              <stop offset="100%" stop-color="#CFD8DC"/>
+            </linearGradient>
+            <radialGradient id="cloudGlow" cx="50%" cy="50%" r="55%">
+              <stop offset="60%" stop-color="#FFECB3" stop-opacity="0.55"/>
+              <stop offset="100%" stop-color="#FFECB3" stop-opacity="0"/>
             </radialGradient>
           </defs>
           <!-- Halo glow behind cloud -->
           <ellipse cx="90" cy="55" rx="90" ry="48" fill="url(#cloudGlow)" class="cloud-halo"/>
-          <!-- Cloud body — fluffy shape -->
-          <g filter="url(#cloudShadow)">
-            <ellipse cx="55" cy="62" rx="30" ry="20" fill="url(#cloudGrad)"/>
-            <ellipse cx="90" cy="50" rx="38" ry="26" fill="url(#cloudGrad)"/>
-            <ellipse cx="125" cy="60" rx="30" ry="22" fill="url(#cloudGrad)"/>
-            <ellipse cx="75" cy="68" rx="22" ry="14" fill="url(#cloudGrad)"/>
-            <ellipse cx="108" cy="70" rx="22" ry="14" fill="url(#cloudGrad)"/>
-          </g>
-          <!-- Subtle silver edge highlight -->
-          <ellipse cx="92" cy="42" rx="32" ry="10" fill="white" opacity="0.7"/>
+          <!-- Cloud body — fluffy shape, each ellipse with its own stroke for iPad clarity -->
+          <ellipse cx="55" cy="62" rx="30" ry="20" fill="url(#cloudGrad)" stroke="#B8C6D1" stroke-width="1.2"/>
+          <ellipse cx="125" cy="60" rx="30" ry="22" fill="url(#cloudGrad)" stroke="#B8C6D1" stroke-width="1.2"/>
+          <ellipse cx="75" cy="68" rx="22" ry="14" fill="url(#cloudGrad)" stroke="#B8C6D1" stroke-width="1.2"/>
+          <ellipse cx="108" cy="70" rx="22" ry="14" fill="url(#cloudGrad)" stroke="#B8C6D1" stroke-width="1.2"/>
+          <ellipse cx="90" cy="50" rx="38" ry="26" fill="url(#cloudGrad)" stroke="#B8C6D1" stroke-width="1.2"/>
+          <!-- Subtle silver edge highlight on top -->
+          <ellipse cx="92" cy="40" rx="32" ry="8" fill="#FFFFFF" opacity="0.8"/>
+          <ellipse cx="70" cy="46" rx="14" ry="4" fill="#FFFFFF" opacity="0.7"/>
         </svg>
         <!-- Kuutonttu sitting on top -->
         <div class="cloud-elf">
@@ -2976,6 +2985,13 @@ if (state.setup.complete && state.setup.kids.length > 0 && state.setup.deeds.len
   showIntro();
 } else {
   obInit(false);
+}
+
+// Register service worker for PWA / home-screen support
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
 }
 </script>
 
