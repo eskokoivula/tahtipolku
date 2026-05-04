@@ -1550,13 +1550,13 @@
 
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
-  import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js';
+  import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js';
   import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js';
   import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyC8CxbucDEJA21etiT2NuBMQOngE7ViyQ0",
-    authDomain: "tahtipolku-bd9dc.firebaseapp.com",
+    authDomain: "tahtipolku.web.app",
     projectId: "tahtipolku-bd9dc",
     storageBucket: "tahtipolku-bd9dc.firebasestorage.app",
     messagingSenderId: "697146379791",
@@ -1569,9 +1569,15 @@
   const db = getFirestore(fbApp);
   getAnalytics(fbApp);
   const provider = new GoogleAuthProvider();
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  getRedirectResult(auth).catch(e => console.warn('Redirect result failed', e));
 
   window.fbSignIn = async () => {
-    try { await signInWithPopup(auth, provider); } catch(e) { console.warn('Sign-in failed', e); }
+    try {
+      if (isMobile) await signInWithRedirect(auth, provider);
+      else await signInWithPopup(auth, provider);
+    } catch(e) { console.warn('Sign-in failed', e); }
   };
 
   window.fbSignOut = async () => {
