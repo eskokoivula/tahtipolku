@@ -1,12 +1,12 @@
-# 🌟 Tähtipolku (Star path)
-
-* A project by the Institute for the Study of Humanity *
+# 🌟 Tähtipolku (Star Path)
 
 A reward tracker for children's good deeds — a magical journey through the Enchanted Forest.
 
-Tähtipolku is a free, open-source web application for families. The app helps reward children for good deeds with stars, and when they collect enough stars, small rewards unlock. The entire app works in Finnish, requires no accounts, no ads, no cloud services — all data stays on the device.
+Tähtipolku is a free web application for families. Children earn stars for good deeds, and unlock small rewards when enough stars are collected. The entire app is in Finnish.
 
-![Tähtipolku](./icon-512.png)
+**Live:** [tahtipolku.web.app](https://tahtipolku.web.app)
+
+![Tähtipolku](./assets/icon.png)
 
 ## ✨ Features
 
@@ -16,24 +16,39 @@ Tähtipolku is a free, open-source web application for families. The app helps r
 - **Enchanted Forest Story**: Moon Elves, Star Trees, and the Queen of the Enchanted Forest
 - **Celebrations**: confetti and triumphant music when reward milestones are reached
 - **Sound Design**: cheerful click sounds for deeds, soft undo tones, joyful milestone fanfare
+- **Multi-device sync**: optional Google Sign-In syncs progress across phone, tablet, and laptop
 - **Works Offline**: once loaded, the app works without internet
 - **Install to Home Screen**: on iPhone, iPad, and Android — "Add to Home Screen" makes it look like a real app
 
 ## 🚀 Usage
 
-1. Open in browser: `https://<username>.github.io/tahtipolku/`
+1. Open [tahtipolku.web.app](https://tahtipolku.web.app) in browser
 2. Complete onboarding (add children and deeds)
-3. On iPad or phone: tap Share → "Add to Home Screen"
-4. Collect stars together!
+3. (Optional) Sign in with Google to sync data across devices
+4. On phone or tablet: tap Share → "Add to Home Screen"
+5. Collect stars together!
 
-All data is stored only in the device's browser localStorage — nothing goes to the internet.
+Without sign-in, all data stays on the device's localStorage. With sign-in, data syncs to Firestore under the parent's account.
 
 ## 🛠 Technology
 
-- Vanilla HTML/CSS/JavaScript — no build step, no dependencies
+- Vanilla HTML/CSS/JavaScript — single file, no build step
+- Firebase Auth (Google Sign-In) + Firestore for optional cloud sync
+- Firebase Hosting for deployment
 - Web Audio API for sound (no audio files)
 - Service Worker for offline support
 - PWA manifest for home screen installation
-- localStorage for persistent storage
+- localStorage as primary storage (Firestore mirrors when signed in)
 
-## 📁 Files
+## 📁 Project Structure
+
+- `index.html` — entire app (HTML, CSS, JS in one file)
+- `manifest.json` — PWA manifest
+- `sw.js` — service worker
+- `assets/` — icon and OG share image
+- `firebase.json`, `.firebaserc` — Firebase Hosting config
+- `tahtipolku-spec.md` — full product specification
+
+## 📄 License
+
+MIT — see [LICENSE](./LICENSE)

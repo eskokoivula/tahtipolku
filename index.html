@@ -9,13 +9,27 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="application-name" content="Tähtipolku">
 <meta name="theme-color" content="#FF9800">
+<meta name="description" content="Lasten taikametsä, jossa hyvät teot muuttuvat tähdiksi.">
 <title>Tähtipolku — Taikametsän seikkailut</title>
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Tähtipolku">
+<meta property="og:title" content="Tähtipolku — Taikametsän seikkailut">
+<meta property="og:description" content="Lasten taikametsä, jossa hyvät teot muuttuvat tähdiksi.">
+<meta property="og:url" content="https://tahtipolku.web.app">
+<meta property="og:image" content="https://tahtipolku.web.app/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="fi_FI">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tähtipolku — Taikametsän seikkailut">
+<meta name="twitter:description" content="Lasten taikametsä, jossa hyvät teot muuttuvat tähdiksi.">
+<meta name="twitter:image" content="https://tahtipolku.web.app/assets/og-image.jpg">
+
 <link rel="manifest" href="manifest.json">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+<link rel="icon" type="image/png" href="assets/icon.png">
+<link rel="apple-touch-icon" href="assets/icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -1475,7 +1489,119 @@
     .intro-big-star { font-size: 110px; }
     .intro-btn { font-size: 22px; padding: 22px 44px; }
   }
+
+  .auth-btn {
+    position: absolute; top: 18px; right: 20px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.85); border: 2px solid #F57C00;
+    color: #5D2F00; font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3; box-shadow: 0 3px 0 #F57C00;
+    overflow: hidden; padding: 0;
+  }
+  .auth-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #F57C00; }
+  .auth-btn img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+
+  .intro-or {
+    margin-top: 6px;
+    font-family: 'Caveat', cursive;
+    font-size: 18px; color: #FFE082;
+    opacity: 0.85; letter-spacing: 1px;
+    animation: intro-fade-in 1s ease 2.0s backwards;
+  }
+  .intro-google-btn {
+    margin-top: 12px;
+    background: #FFFFFF; color: #1F1F1F;
+    border: 1px solid #DADCE0;
+    padding: 12px 22px;
+    font-family: 'Roboto', -apple-system, 'Nunito', sans-serif;
+    font-size: 14px; font-weight: 600; letter-spacing: 0.25px;
+    border-radius: 28px;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    display: inline-flex; align-items: center; gap: 12px;
+    transition: transform 0.1s, box-shadow 0.2s;
+    animation: intro-fade-in 1s ease 2.1s backwards;
+  }
+  .intro-google-btn:active { transform: translateY(2px); box-shadow: 0 3px 10px rgba(0,0,0,0.3); }
+  .intro-google-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .auth-user-photo { width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 12px; display: block; border: 3px solid #F57C00; }
+  .auth-user-name { font-family: 'Fredoka One', cursive; font-size: 18px; color: #5D2F00; margin-bottom: 4px; }
+  .auth-user-email { font-size: 12px; color: #8D6E63; margin-bottom: 16px; }
+  .auth-google-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; padding: 14px; border-radius: 14px;
+    background: white; border: 2px solid #E0E0E0;
+    font-size: 15px; font-weight: 700; color: #3D2914; cursor: pointer; margin-bottom: 8px;
+  }
+  .auth-google-btn:active { transform: scale(0.98); }
+  .auth-signout-btn {
+    width: 100%; padding: 12px; border-radius: 14px;
+    background: white; border: 2px solid #CFC1A8;
+    font-size: 14px; font-weight: 800; color: #8D6E63; cursor: pointer;
+  }
+  .auth-signout-btn:active { transform: scale(0.98); }
+  .auth-cloud-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #E8F5E9; color: #2E7D32; border-radius: 20px;
+    padding: 4px 10px; font-size: 12px; font-weight: 700; margin-bottom: 16px;
+  }
 </style>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js';
+  import { getAuth, signInWithPopup, signOut, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js';
+  import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js';
+  import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyC8CxbucDEJA21etiT2NuBMQOngE7ViyQ0",
+    authDomain: "tahtipolku-bd9dc.firebaseapp.com",
+    projectId: "tahtipolku-bd9dc",
+    storageBucket: "tahtipolku-bd9dc.firebasestorage.app",
+    messagingSenderId: "697146379791",
+    appId: "1:697146379791:web:bbd1e9bf7102cfc1151d7a",
+    measurementId: "G-GZ7YFJLM15"
+  };
+
+  const fbApp = initializeApp(firebaseConfig);
+  const auth = getAuth(fbApp);
+  const db = getFirestore(fbApp);
+  getAnalytics(fbApp);
+  const provider = new GoogleAuthProvider();
+
+  window.fbSignIn = async () => {
+    try { await signInWithPopup(auth, provider); } catch(e) { console.warn('Sign-in failed', e); }
+  };
+
+  window.fbSignOut = async () => {
+    try { await signOut(auth); } catch(e) { console.warn('Sign-out failed', e); }
+  };
+
+  window.fbSaveState = async (stateObj) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    try { await setDoc(doc(db, 'users', user.uid, 'data', 'state'), JSON.parse(JSON.stringify(stateObj))); } catch(e) { console.warn('Firestore save failed', e); }
+  };
+
+  let firstAuth = true;
+  onAuthStateChanged(auth, async (user) => {
+    let cloudData = null;
+    if (user) {
+      try {
+        const snap = await getDoc(doc(db, 'users', user.uid, 'data', 'state'));
+        if (snap.exists()) cloudData = snap.data();
+      } catch(e) { console.warn('Firestore load failed', e); }
+    }
+    if (firstAuth) {
+      firstAuth = false;
+      document.dispatchEvent(new CustomEvent('fbReady', { detail: { user, cloudData } }));
+    } else {
+      document.dispatchEvent(new CustomEvent('fbAuthChanged', { detail: { user, cloudData } }));
+    }
+  });
+</script>
+
 </head>
 <body>
 
@@ -1574,7 +1700,17 @@
       <span class="intro-btn-spark">✨</span>
     </button>
 
-    <p class="intro-whisper">tapaa kuutonttuja · kerää tähtiä · kasvata oma Tähtipuu</p>
+    <div class="intro-or" id="intro-or">tai</div>
+
+    <button class="intro-google-btn" id="intro-google-btn" onclick="doSignIn()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Kirjaudu Googlella
+    </button>
   </div>
 
   <!-- Zoom transition overlay -->
@@ -1765,6 +1901,7 @@
 <div class="container" id="main-app" style="display:none;">
   <header class="banner">
     <button class="settings-btn" onclick="openSettings()" title="Asetukset">⚙️</button>
+    <button class="auth-btn" id="auth-btn" onclick="openAuthModal()" title="Tili">👤</button>
 
     <!-- Rolling silver hills silhouette at bottom -->
     <svg class="banner-hills" viewBox="0 0 400 60" preserveAspectRatio="none" aria-hidden="true">
@@ -1877,9 +2014,74 @@
   <button class="pop-btn" onclick="closePopup()">HURRAA! 🎉</button>
 </div>
 
+<div class="modal-overlay" id="auth-modal" onclick="if(event.target===this)closeAuthModal()">
+  <div class="modal">
+    <div class="auth-modal-content" id="auth-modal-content"></div>
+    <button class="modal-close" onclick="closeAuthModal()">Sulje</button>
+  </div>
+</div>
+
 <div class="confetti-container" id="confetti-container"></div>
 
 <script>
+// ── Firebase auth UI ──────────────────────────────────────────────
+function updateAuthBtn(user) {
+  const btn = document.getElementById('auth-btn');
+  if (btn) {
+    if (user && user.photoURL) {
+      btn.innerHTML = '<img src="' + user.photoURL + '" alt="">';
+    } else if (user) {
+      btn.innerHTML = '✅';
+    } else {
+      btn.innerHTML = '👤';
+    }
+  }
+  const introOr = document.getElementById('intro-or');
+  const introGoogle = document.getElementById('intro-google-btn');
+  if (introOr) introOr.style.display = user ? 'none' : '';
+  if (introGoogle) introGoogle.style.display = user ? 'none' : '';
+}
+
+function openAuthModal() {
+  const user = window.fbCurrentUser;
+  const content = document.getElementById('auth-modal-content');
+  if (user) {
+    const photo = user.photoURL ? '<img class="auth-user-photo" src="' + user.photoURL + '" alt="">' : '<div class="auth-user-photo" style="background:#FFE0B2;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 12px;">👤</div>';
+    content.innerHTML = photo +
+      '<div class="auth-user-name">' + (user.displayName || 'Käyttäjä') + '</div>' +
+      '<div class="auth-user-email">' + (user.email || '') + '</div>' +
+      '<div class="auth-cloud-badge">☁️ Pilvisynkronointi päällä</div>' +
+      '<button class="auth-signout-btn" onclick="doSignOut()">Kirjaudu ulos</button>';
+  } else {
+    content.innerHTML =
+      '<div style="font-size:40px;margin-bottom:12px;">☁️</div>' +
+      '<div class="auth-user-name" style="margin-bottom:8px;">Pilvisynkronointi</div>' +
+      '<div class="auth-user-email" style="margin-bottom:16px;">Kirjaudu sisään ja käytä Tähtipolkua usealla laitteella. Tähdet tallentuvat pilveen.</div>' +
+      '<button class="auth-google-btn" onclick="doSignIn()">' +
+        '<svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>' +
+        'Kirjaudu Googlella' +
+      '</button>';
+  }
+  document.getElementById('auth-modal').classList.add('show');
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-modal').classList.remove('show');
+}
+
+async function doSignIn() {
+  closeAuthModal();
+  if (window.fbSignIn) await window.fbSignIn();
+}
+
+async function doSignOut() {
+  closeAuthModal();
+  if (window.fbSignOut) await window.fbSignOut();
+  window.fbCurrentUser = null;
+  updateAuthBtn(null);
+}
+// ─────────────────────────────────────────────────────────────────
+
 const ROLES = [
   { id:'fox', ico:'🦊', title:'Ketturitari', bio:'vartioi Hopeametsän eteläporttia', color:'#E65100', bg:'#FFE0B2', accent:'#FF7043' },
   { id:'butterfly', ico:'🦋', title:'Perhoskeijutar', bio:'lentää viestejä kuun ja puiden välillä', color:'#6A1B9A', bg:'#F3E5F5', accent:'#AB47BC' },
@@ -1974,7 +2176,9 @@ function loadState() {
 }
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+  if (window.fbSaveState) window.fbSaveState(state);
 }
+
 function getRole(roleId) { return ROLES.find(r => r.id === roleId) || ROLES[0]; }
 
 let audioCtx = null;
@@ -2977,15 +3181,57 @@ function replayIntro() {
   showIntro();
 }
 
-loadState();
-buildMagicBg();
-if (state.setup.complete && state.setup.kids.length > 0 && state.setup.deeds.length > 0) {
-  showMainApp();
-} else if (!state.setup.kids || state.setup.kids.length === 0) {
-  showIntro();
-} else {
-  obInit(false);
+function startApp() {
+  buildMagicBg();
+  if (state.setup.complete && state.setup.kids.length > 0 && state.setup.deeds.length > 0) {
+    showMainApp();
+  } else if (!state.setup.kids || state.setup.kids.length === 0) {
+    showIntro();
+  } else {
+    obInit(false);
+  }
 }
+
+let appStarted = false;
+
+document.addEventListener('fbReady', (e) => {
+  if (appStarted) return;
+  appStarted = true;
+  const { user, cloudData } = e.detail;
+  window.fbCurrentUser = user || null;
+  updateAuthBtn(user);
+  if (cloudData && cloudData.setup) {
+    state.setup = cloudData.setup;
+    state.progress = cloudData.progress || {};
+    state.soundOn = cloudData.soundOn !== false;
+    if (!Array.isArray(state.setup.kpis) || state.setup.kpis.length === 0) {
+      state.setup.kpis = JSON.parse(JSON.stringify(DEFAULT_KPIS));
+    }
+    state.setup.kids.forEach(k => {
+      if (!state.progress[k.id]) state.progress[k.id] = { pts: 0, history: [] };
+    });
+  } else {
+    loadState();
+    if (user && window.fbSaveState) window.fbSaveState(state);
+  }
+  startApp();
+});
+
+document.addEventListener('fbAuthChanged', (e) => {
+  const { user } = e.detail;
+  window.fbCurrentUser = user || null;
+  updateAuthBtn(user);
+  if (user) window.location.reload();
+});
+
+// Fallback: jos Firebase ei lataudu 5 sekunnissa, käynnistetään ilman sitä
+setTimeout(() => {
+  if (!appStarted) {
+    appStarted = true;
+    loadState();
+    startApp();
+  }
+}, 5000);
 
 // Register service worker for PWA / home-screen support
 if ('serviceWorker' in navigator) {

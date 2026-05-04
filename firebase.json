@@ -1,0 +1,15 @@
+{
+  "hosting": {
+    "site": "tahtipolku",
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/node_modules/**",
+      "*.md",
+      "*.log",
+      "404.html"
+    ]
+  }
+}
